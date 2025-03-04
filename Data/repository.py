@@ -87,7 +87,7 @@ class Repo:
     
     def dobi_smer(self, ime:str) -> Smeri:
         self.cur.execute("""
-            SELECT id, ime, tezavnost, opis, sektor
+            SELECT id, ime, tezavnost, opis, bolder
             FROM Smeri
             WHERE ime = %s
              """, (ime,))
@@ -126,7 +126,7 @@ class Repo:
         self.cur.execute("""
             INSERT into smer(ime, tezavnost, opis, sektor_id)
             VALUES (%s, %s, %s, %s)
-            """, (smer.ime, smer.tezavnost, smer.opis, smer.sektor_id))
+            """, (smer.ime, smer.tezavnost, smer.opis, smer.bolder_id))
         self.conn.commit()
 
     def odstrani_bolder(self, id):

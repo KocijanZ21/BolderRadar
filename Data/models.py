@@ -63,4 +63,4 @@ class Smeri:
     ime : str = field(default="") 
     tezavnost : str = field(default="")
     opis : str=field(default="")
-    sektor_id : int = field(default=0)
+    bolder_id : int = field(default=0)
