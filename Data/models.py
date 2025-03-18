@@ -14,6 +14,13 @@ class Uporabniki:
     email: str =field(default="")
     geslo: str =field(default="")
     datum_reg: datetime=field(default=datetime.now()) 
+
+@dataclass
+
+class UporabnikiDto:
+    id : int = field(default=0)
+    ime : str = field(default="")
+    email: str =field(default="")
     
 
 
@@ -37,6 +44,7 @@ class Parkirisca:
 class Sektorji:
     id : int = field(default=0)
     ime : str = field(default="") 
+    pokrajina : str = field(default="")
     lat : float = field(default=0)
     lng : float=field(default=0) 
     opis : str=field(default="")
