@@ -1,0 +1,82 @@
+%rebase('layout_template.html', naslov='Boulder Radar')
+        
+<div class="map-container">
+    <div id="map"></div>
+</div>
+
+<!-- Leaflet.js -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<div id="info-template" style="display: none;">
+    <div id="content">
+        <div id="siteNotice"></div>
+        <h2 id="firstHeading" style="font-size: 25px;" class="firstHeading">Title</h2>
+        <div id="bodyContent">
+            <p id="description">Description</p>
+            <button id="details-button" class="button button1">Details</button>
+        </div>
+    </div>
+</div>
+    
+    <script>
+        function createInfoWindowFromTemplate(title, description, boulder_id) {
+                // Get the template element
+                const template = document.getElementById("info-template");
+                
+                // Clone the template so we don't modify the original
+                const content = template.cloneNode(true);
+                content.style.display = "block";  // Unhide the cloned element
+                
+                function callJavascriptFunction() {
+                    console.log("asd");
+                }
+
+                // Set dynamic content
+                content.querySelector("#firstHeading").innerText = title;
+                content.querySelector("#description").innerText = description;
+                let detail_button = content.querySelector("#details-button");
+                
+                detail_button.setAttribute("onclick",`location.href='/boulder-info?id=${boulder_id}&approving=False'`);
+                //detail_button.onclick = function(){console.log("YEP")};  
+                // console.log(detail_button);
+                // detail_button.addEventListener("click", function(){
+                //     console.log("WE DO BE HERE");
+                //     window.location.href = '/boulder-info?id=${'+boulder_id+'}';
+                // });
+                console.log(detail_button);
+                return content.innerHTML;  // Return the HTML as a string
+        }
+        // Get coordinates from Flask
+        const latitude = 46.056946;
+        const longitude = 14.505751;
+
+        // Initialize the map
+        var map = L.map('map').setView([latitude, longitude], 10);
+
+        // Load OSM tiles
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Function to create a popup with a button
+        function createPopupContent(lat, lng) {
+            return `<b>Location</b><br>Coordinates: ${lat.toFixed(6)}, ${lng.toFixed(6)}<br>
+                    <button onclick="alert('Button clicked at: ${lat.toFixed(6)}, ${lng.toFixed(6)}')">
+                    Click Me</button>`;
+        }
+
+        const markerIcon = L.icon({
+            iconUrl: `/static/BoulderPinpointIcon.png`,
+            iconSize: [31, 46], // size of the icon
+            iconAnchor: [15.5, 42], // point of the icon which will correspond to marker's location
+            popupAnchor: [0, -45] // point from which the popup should open relative to the iconAnchor
+        });
+
+        boulders.forEach(function(boulder) {
+            console.log(boulder.lat, boulder.lng)
+            // Add a marker at the initial location
+            var marker = L.marker([boulder.lat, boulder.lng], {
+                icon: markerIcon}).addTo(map)
+                .bindPopup(createInfoWindowFromTemplate(boulder.name, boulder.description, boulder.id))
+                });
+    </script>
+    

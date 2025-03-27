@@ -1,0 +1,310 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+/* Map inside the yellow box */
+
+.map-container {
+    width: 100%;   /* Adjust as needed */
+    height: 80svh; /* Fixed height */
+    margin: auto;  /* Center the map */ 
+    border: 2px solid #ccc; /* Border around the map */
+}
+
+#map {
+    height: 100%;
+    width: 100%;
+}
+
+
+.button {
+    text-decoration: none; /* Remove underline */
+    padding: 8px 16px; /* Padding for button */
+    color: black; /* Black text */
+    background-color: #FBBC04;  /* background */
+    border-radius: 5px; /* Rounded corners */
+    font-weight: bold; /* Bold text */
+    border: 2px solid black; /* Black border */
+    transition: background-color 0.3s; /* Smooth color transition */
+}
+
+
+h2 {                                        /* ???? */
+    text-align: center;
+    /*background-color: #FBBC04;*/
+    padding: 5px;
+    max-width: fit-content;
+    border-radius: 12px;
+    border-color: #333;
+    color: #333;
+    margin:auto;
+}
+
+.boulder-section {                      /* Nisem še tok daleč, zaenkrat še ne tikamo */
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+
+.routes-table {                     /* Nisem še tok daleč, zaenkrat še ne tikamo */
+    border-collapse: collapse;
+    width: 47%;
+}
+
+.routes-table th, .routes-table td {    /* Nisem še tok daleč, zaenkrat še ne tikamo */
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+.routes-table th {                      /* Nisem še tok daleč, zaenkrat še ne tikamo */
+    background-color: #f2f2f2;
+    text-align: left;
+}
+
+.routes-table tr:nth-child(even) {      /* Nisem še tok daleč, zaenkrat še ne tikamo */
+    background-color: #f9f9f9;
+}
+
+.description-section, .notice-section, .comments-section {
+    margin-bottom: 20px;
+}                                       /* Nisem še tok daleč, zaenkrat še ne tikamo */
+
+
+.comment {                              /* Nisem še tok daleč, zaenkrat še ne tikamo */
+    background-color: #fff;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+    .boulder-section {
+        flex-direction: column;
+    }
+}
+
+/* Container for positioning the home button */
+.home-button-container {                /* Pogruntaj kako v layout */
+    position: absolute;
+    width: 100%;
+    background-color: #FBBC04;
+}
+
+/* Style for the home button (image) */
+.home-button {                                              /* anono */
+    display: flex; /* Enables alignment for child img */
+    justify-content: center;
+    align-items: center;
+    width: 125px; /* Adjust size as needed */
+    height: 70px; /* Adjust size as needed */
+}
+
+.home-button img {
+    width: 125px;
+    height: 100%;
+    background-color: #FBBC04;
+    border-radius: 10%; /* Make image button round */
+    transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+/* Hover effect to change the image color */
+.home-button img:hover {
+    transform: scale(1.05); /*  Slight zoom on hover */
+    /*filter: brightness(1.2);  Color change effect */
+    cursor: pointer; /* Change cursor to pointer */
+}
+
+.navbar {
+    background-color: #FBBC04;
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Space out the elements */
+    padding: 10px 4%; 
+    margin-bottom: 10px;
+}
+
+
+/* Style for the middle navigation links */
+.navbar .nav-links {
+    display: flex;
+    justify-content: center;
+    flex-grow: 1; /* Makes it take up available space */
+}
+
+
+.navbar .nav-links a {
+    padding: 26px 20px;
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
+}
+
+
+/* Style for the right section (Login button) */
+.navbar .login-container {
+    display: flex;
+    align-items: center;
+    margin-left: auto !important; /* Potisne gumb na desno */
+}
+
+
+/* Change color on hover */
+.navbar a:hover {
+    background-color: #FFD966;
+    color: black;
+}
+
+/* Styling for the centered description box */
+.centered-box {
+    border: 3px solid #FBBC04; /* Yellow border */
+    margin: auto;
+    
+}
+
+/* Style the top navigation bar */
+ .top-nav {                                               /* Ne vidi ničesar??? */
+    position: fixed;            /* Keep it fixed at the top */
+    top: 0;
+    right: 0;
+    padding: 10px;              /* Add padding for spacing */
+    display: flex;              /* Align buttons horizontally */
+    gap: 10px;                  /* Space between buttons */
+    z-index: 1000;              /* Ensure it appears above other elements */
+    background-color: #FBBC04;  /* Optional: background color for contrast */
+}
+
+.form-grid {                            /* Nisem še tok daleč, zaenkrat še ne tikamo */
+    display: grid;
+    grid-template-columns: auto 1fr;  /* Two columns: auto for labels, flex for inputs */
+    gap: 10px;                        /* Space between elements */
+    align-items: center;              /* Center-align vertically for even label-input alignment */
+    max-width: 400px;                 /* Limit the width of the form */
+}
+
+
+/* Style the username link */
+summary {                           /* Nisem še tok daleč, zaenkrat še ne tikamo */
+    cursor: pointer;
+    font-weight: bold;
+    color: #007BFF;
+    list-style: none;
+}
+
+/* Style the dialog content */
+details {                           /* Nisem še tok daleč, zaenkrat še ne tikamo */
+    position: relative;
+    display: inline-block;
+}
+
+.logout-dialog {                    /* Nisem še tok daleč, zaenkrat še ne tikamo */
+    position: relative;
+    margin-top: 30px;
+    right: 0;
+    background-color: white;
+    border: 1px solid #ddd;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    border-radius: 5px;
+    width: 200px;
+    text-align: center;
+}
+
+.logout-dialog button {                 /* Nisem še tok daleč, zaenkrat še ne tikamo */
+    margin: 5px;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+
+.dialog-overlay {               /* Nisem še tok daleč, zaenkrat še ne tikamo */
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+}
+
+.dialog-box {                   /* Nisem še tok daleč, zaenkrat še ne tikamo */
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.dialog-box input {             /* Nisem še tok daleč, zaenkrat še ne tikamo */
+    width: 80%;
+    padding: 10px;
+    margin: 10px 0;
+}
+
+.dialog-box button {                /* Nisem še tok daleč, zaenkrat še ne tikamo */
+    margin: 10px;
+    padding: 8px 15px;
+    cursor: pointer;
+}
+
+
+.buttons {                          /* Nisem še tok daleč, zaenkrat še ne tikamo */
+    display: flex;
+    justify-content: center;
+    margin-top: 10px; /* Space between slideshow and buttons */
+}
+    /* Small arrow buttons */
+.arrow-btn {                        /* Nisem še tok daleč, zaenkrat še ne tikamo */
+    background: #FBBC04; /* Semi-transparent background */
+    border: none;
+    font-weight: bold;
+    font-size: 24px; /* Adjust size of arrow */
+    cursor: pointer;
+    color: black;
+    text-align: center;
+    padding: 5px 10px;
+    border-radius: 50%;
+}
+
+.arrow-btn:hover {
+    background: #FFD966; /* Light background on hover */
+}
+
+/*.popup {                                  morda eventually
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.popup-content {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    width: 300px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+    z-index: 10000;
+}
+/* Hide popup when checkbox is unchecked 
+#popup-control:not(:checked) + .popup {
+    display: none;
+}*/

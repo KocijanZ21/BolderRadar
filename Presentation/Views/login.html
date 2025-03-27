@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prijava</title>
+    <link href="{{url('static', filename='style.css')}}" rel="stylesheet">
+</head>
+<body>
+    <div class="top-nav">
+        <a href="/prijava" class="button">Prijava</a>
+        <a href="/registracija" class="button">Registracija</a>
+    </div>
+    <div class="home-button-container">
+        <a href="/" class="home-button">
+            <img src="/static/Logo2.png" alt="Home" class="home-icon">
+        </a>
+        <h2 style="font-size: 30px;">Prijava</h2>
+    </div>
+    <br>
+    <br>
+    <div class="centered-box" style="width: 50%; height: max-content; display: flex; margin-top: 70px; justify-content: center; align-items: center;">
+        <form action="/prijava" method="POST">
+            <label for="username">Email:</label>
+            <input type="text" id="email" name="email" required>
+    
+            <label for="password">Geslo:</label>
+            <input type="password" id="password" name="password" required>
+    
+            <button class="button" type="submit" style="margin: 10px;">Prijava</button>
+        </form>
+    </div>  
+    <!---->
+
+<p style="text-align: center;">Don't have account? <a href="/registracija">Register here</a>.</p>
+</body>
+</html>

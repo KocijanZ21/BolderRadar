@@ -1,0 +1,53 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>{{naslov}}</title>
+
+    <link href="{{url('static', filename='style.css')}}" rel="stylesheet">   
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body style="overflow-x: hidden">
+    <div class="navbar">
+        <!-- Left: Logo -->
+        <div class="logo-container">
+            <a href="/" class="home-button">
+                <img src="/static/Logo2.png" alt="Home" class="home-icon">
+            </a>
+        </div>
+    
+        <!-- Center: Navigation Links -->
+        <div class="nav-links">
+            <a href="/" { if request.path = '/' } style="background-color: #ffda6c;" {% end}>MAP</a>
+            <a href="/boulder-info" { if request.path = '/boulder-info' } style="background-color: #ffda6c;" {% end}>BOULDER</a>
+            <a href="/submitboulder" { if request.path = '/submitboulder' } style="background-color: #ffda6c;" {% end}>SUBMIT BOULDER</a>
+            <a href="/aboutus" { if request.path = '/aboutus' } style="background-color: #ffda6c;" {% end}>ABOUT US</a>
+        </div>
+    </div>
+        <!-- Ker pisano v janja2, je skos "aktivno" (svetlo) stanje. Popravi v maki (al karkol že je) -->
+
+        <!-- Right: Login Button -->
+        <div class="login-container">
+            % if request.get_cookie('uporabnik'):
+                <details>
+                    <summary>${'uporabnik'}</summary>     <!---->
+                    <div class="logout-dialog">
+                        <p>Are you sure you want to logout?</p>
+                        <a href="/logout" class="button">Yes</a>
+                        <button onclick="this.closest('details').removeAttribute('open')" class="button">Cancel</button>
+                    </div>
+                </details>
+            % else:
+            <a href="/prijava" class="button" style="font-size: large;">Prijava</a>
+            %end
+            
+        </div>
+
+    <div class="centered-box" style="width: 95%; display: flex; margin-top: 10px; justify-content: center; align-items: center; height: max-content;">
+        {{!base}}
+    </div>     
+</body>

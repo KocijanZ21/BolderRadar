@@ -1,0 +1,68 @@
+%rebase('layout_template.html', naslov='Dodaj bolder')
+
+{% block content %}
+{% if session.get('user_username') %}
+    <script>
+        // Function to add a new route input field
+        function addRoute() {
+            const routeList = document.getElementById("route-list");
+            const newRoute = document.createElement("div");
+            newRoute.classList.add("route-item");
+
+            newRoute.innerHTML = `
+                <input type="number" name="route_numbers[]" placeholder="Enter route number" required>
+                <input type="text" id = route_numbers[] name="route_names[]" placeholder="Enter route name" required>
+                <input type="text" name="route_grades[]" placeholder="Enter route grade" required>
+                <input type="text" name="route_quality[]" placeholder="Enter route quality" required>
+                <button type="button" onclick="removeRoute(this)">Remove</button>
+            `;
+            routeList.appendChild(newRoute);
+        }
+
+        // Function to remove a route input field
+        function removeRoute(button) {
+            button.parentElement.remove();
+        }
+    </script>
+    <form method="POST" action="/add_boulder" enctype="multipart/form-data">
+        <label for="boulder_name">Boulder Name:</label>
+        <input type="text" id="boulder_name" name="boulder_name" required>
+        <br>
+        <br>
+        <label for="boulder_coordinates">Boulder Coordinates:</label><br>
+        <input type="number" id="boulder_lng" name="boulder_lng" placeholder="Enter lng of boulder" required>
+        <input type="number" id="boulder_lat" name="boulder_lat" placeholder="Enter lat of boulder" required><br>
+        <br>
+        <label for="boulder_description">Description:</label><br>
+        <textarea name="boulder_description" cols="40" rows="5" placeholder="Directions to boulder..." required ></textarea>
+        <br>
+        <br>
+        <label for="boulder_important_notice">Important notice:</label><br>
+        <textarea name="boulder_important_notice" cols="40" rows="5" placeholder="Directions to boulder..." required ></textarea>
+        <br>
+        <br>
+        <label for="boulder_pictures">Boulder Pictures:</label>
+        <input type="file" id="boulder_pictures" name="boulder_pictures" accept=".jpg, .jpeg, .png" multiple required>
+        <br>
+        <br>
+
+        <hr>
+
+        <div id="route-list">
+            <!-- Dynamic route inputs will be added here -->
+            <div class="route-item">
+                <input type="number" name="route_numbers[]" placeholder="Enter route number" required>
+                <input type="text" id = "route_names[]" placeholder="Enter route name" required>
+                <input type="text" name="route_grades[]" placeholder="Enter route grade" required>
+                <input type="text" name="route_quality[]" placeholder="Enter route quality" required>
+                <button type="button" onclick="removeRoute(this)">Remove</button>
+            </div>
+        </div>
+        <button type="button" onclick="addRoute()">Add Another Route</button><br><br>
+
+        <button class="button">Submit Boulder</button>
+    </form>
+{% else %}
+    First log in to submit boulder!
+{% endif %}
+{% endblock %}
