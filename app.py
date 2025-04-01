@@ -1,4 +1,4 @@
-from Presentation.bottleext import get, post, run, request, template, redirect, static_file, url, response, template_user
+from Presentation.bottleext import get, post, run, request, template, redirect, static_file, url, response
 from functools import wraps
 
 from Services.auth_service import AuthService
@@ -9,7 +9,7 @@ auth = AuthService()
 service = BolderjiService()
 
 # privzete nastavitve
-SERVER_PORT = os.environ.get('BOTTLE_PORT', 8081)
+SERVER_PORT = os.environ.get('BOTTLE_PORT', 8083)
 RELOADER = os.environ.get('BOTTLE_RELOADER', True)
 
 
@@ -50,7 +50,7 @@ def about_us():
 
 @get('/prijava')
 def prijava_get():
-    return template('login.html', uporabnik=None)
+    return template('login.html', uporabnik=None, napaka=None)
 
 @post('/prijava')
 def prijava():
@@ -60,19 +60,16 @@ def prijava():
     """
     email = request.forms.get('email')
     password = request.forms.get('password')
-
-    if not auth.obstaja_uporabnik(email):
-        return template("login.html", napaka="Uporabnik s tem imenom ne obstaja")
-
+    
     prijava = auth.prijavi_uporabnika(email, password)
     if prijava:
-        response.set_cookie("uporabnik", email, path="/")
-        bolderji = service.dobi_bolderje()
-        
-        redirect(url('index', uporabnik=email))
+        response.set_cookie("email", email, path="/")   
+        response.set_cookie("uporabnik", prijava.ime, path="/")
+        uporabnik=prijava.ime
+        redirect(url('index', uporabnik=uporabnik))
 
     else:
-        return template("prijava.html", uporabnik=None, napaka="Neuspešna prijava. Napačno geslo ali elektronska pošta.")
+        return template("login.html", uporabnik=None, napaka="Neuspešna prijava. Napačno geslo ali email naslov.")
 
 @get('/odjava')
 def odjava():
@@ -81,40 +78,49 @@ def odjava():
     """
     
     response.delete_cookie("uporabnik")
+    response.delete_cookie("email")
     
-    return template('index.html', uporabnik=None, napaka=None)
+    return template('index.html', uporabnik=None, napaka=None, request=request)
 
 @get('/registracija')
 def registracija_get():
-    return template('register.html', uporabnik=None)
+    return template('register.html', uporabnik=None, napaka=None)
 
 @post('/registracija')
 def registracija_post():
     """
     Registracija uporabnika. Dodajanje uporabnika v tabelo uporabniki.
     """
-    ime = request.forms.getunicode('ime')
-    email = request.forms.get('email')
+    ime = request.forms.get('ime').encode('utf-8').decode('utf-8')  # Prepozna šumnike
+    email = request.forms.getunicode('email')
     password = request.forms.get('password')
+
+    # Preveri, če uporabniško ime že obstaja
+    if auth.obstaja_uporabnik(email):
+        return template('registracija.html', napaka="Profil s tem email naslovom že obstaja.")
 
     auth.dodaj_uporabnika(ime, email, password)
 
-    redirect(url('index'))
+    redirect(url('prijava_get'))
 
 @get('/dodaj_bolder')
 def dodaj_bolder_get():
-    return template('dsubmit_bolder_form.html', uporabnik=None)
+    uporabnik = request.get_cookie("uporabnik")
+    return template('submit_boulder_form.html', uporabnik=uporabnik, request=request)
 
-#@post('/dodaj_bolder')
-#def dodaj_bolder_post():
-#    """
-#    Dodajanje bolderja v tabelo bolderji.
-#    """
-#    ime = request.forms.getunicode('ime')
-#    tezavnost = request.forms.getunicode('tezavnost')
-#    opis = request.forms.getunicode('opis')
-#    service.dodaj_bolder(ime, tezavnost, opis)
-#    redirect(url('index'))
+@post('/dodaj_bolder')
+def dodaj_bolder_post():
+    """
+    Dodajanje bolderja v tabelo bolderji.
+    """
+    ime = request.forms.getunicode('ime')
+    lat = request.forms.get('lat')
+    lng = request.forms.get('lng')
+    opis = request.forms.getunicode('opis')
+    sektor = request.forms.get('sektor')
+    parkirisca = request.forms.get('parkirisca')
+    service.dodaj_bolder(ime, lat, lng, opis, sektor, parkirisca)
+    redirect(url('index'))
 
 
 

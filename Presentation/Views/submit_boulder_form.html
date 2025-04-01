@@ -1,7 +1,8 @@
 %rebase('layout_template.html', naslov='Dodaj bolder')
 
-{% block content %}
-{% if session.get('user_username') %}
+<!-- še veliko dela. Preveri povezave do funkcij, naredi funkcije, povezava do tabelc!!! -->
+
+% if uporabnik:
     <script>
         // Function to add a new route input field
         function addRoute() {
@@ -24,27 +25,27 @@
             button.parentElement.remove();
         }
     </script>
-    <form method="POST" action="/add_boulder" enctype="multipart/form-data">
-        <label for="boulder_name">Boulder Name:</label>
-        <input type="text" id="boulder_name" name="boulder_name" required>
+    <form method="POST" action="/dodaj_bolder" enctype="multipart/form-data">
+        <label for="ime">Ime bolderja:</label>
+        <input type="text" id="ime" name="ime" required>
         <br>
         <br>
-        <label for="boulder_coordinates">Boulder Coordinates:</label><br>
-        <input type="number" id="boulder_lng" name="boulder_lng" placeholder="Enter lng of boulder" required>
-        <input type="number" id="boulder_lat" name="boulder_lat" placeholder="Enter lat of boulder" required><br>
+        <label for="boulder_coordinates">Koordinate:</label><br>
+        <input type="number" id="lat" name="lat" placeholder="Zemljepisna širina" required>
+        <input type="number" id="lng" name="lng" placeholder="Zemljepisna dolžina" required><br>
         <br>
-        <label for="boulder_description">Description:</label><br>
-        <textarea name="boulder_description" cols="40" rows="5" placeholder="Directions to boulder..." required ></textarea>
-        <br>
-        <br>
-        <label for="boulder_important_notice">Important notice:</label><br>
-        <textarea name="boulder_important_notice" cols="40" rows="5" placeholder="Directions to boulder..." required ></textarea>
+        <label for="opis">Opis:</label><br>
+        <textarea name="opis" cols="40" rows="5" placeholder="Navodila do bolderja ipd." required></textarea>
         <br>
         <br>
-        <label for="boulder_pictures">Boulder Pictures:</label>
-        <input type="file" id="boulder_pictures" name="boulder_pictures" accept=".jpg, .jpeg, .png" multiple required>
+        <label for="boulder_important_notice">Sektor:</label><br>
+        <textarea name="sektor" cols="40" rows="2" placeholder="Če samo en bolder v okolici, lahko ime bolderja" required ></textarea>
         <br>
         <br>
+        <form action="/dodaj-parkirisce" method="POST">  <!-- še ne obstaja -->
+            <button type="submit" class="button">Dodaj parkirišče</button>
+        </form>
+        
 
         <hr>
 
@@ -60,9 +61,8 @@
         </div>
         <button type="button" onclick="addRoute()">Add Another Route</button><br><br>
 
-        <button class="button">Submit Boulder</button>
+        <button class="button">Dodaj bolder</button>
     </form>
-{% else %}
-    First log in to submit boulder!
-{% endif %}
-{% endblock %}
+% else:
+    Za dodajanje bolderjev morate biti prijavljeni.
+% end

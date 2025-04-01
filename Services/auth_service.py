@@ -17,24 +17,25 @@ class AuthService:
         except:
             return False
         
-    def prijavi_uporabnika(self, uporabnik : str, geslo: str) -> UporabnikiDto | bool :
+    def prijavi_uporabnika(self, uporabnik : str, u_geslo: str) -> UporabnikiDto | bool :
 
         # Najprej dobimo uporabnika iz baze
-        user = self.repo.dobi_uporabnika(uporabnik)
-
-        geslo_bytes = geslo.encode('utf-8')
+        try:
+            user = self.repo.dobi_uporabnika(uporabnik)
+            print('service user', user)
+        except:
+            return False
+        # Preverimo, če je geslo pravilno
+        geslo_bytes = u_geslo.encode('utf-8')
         # Ustvarimo hash iz gesla, ki ga je vnesel uporabnik
-        succ = bcrypt.checkpw(geslo_bytes, user.password_hash.encode('utf-8'))
+        succ = bcrypt.checkpw(geslo_bytes, user.geslo.encode('utf-8'))
 
         if succ:
-            # popravimo last login time
-            user.last_login = date.today().isoformat()
-            self.repo.posodobi_uporabnika(user)
-            return UporabnikiDto(username=user.username)
+            return UporabnikiDto(ime=user.ime, email=user.email)
         
         return False
 
-    def dodaj_uporabnika(self, uporabnik: str, geslo: str) -> UporabnikiDto:
+    def dodaj_uporabnika(self, uporabnik: str, u_email:str, geslo: str) -> UporabnikiDto:
 
         # zgradimo hash za geslo od uporabnika
 
@@ -50,11 +51,12 @@ class AuthService:
         # Sedaj ustvarimo objekt Uporabnik in ga zapišemo bazo
 
         u = Uporabniki(
-            username=uporabnik,
-            password_hash=password_hash.decode(),
-            last_login= date.today().isoformat()
-        )
+            ime=uporabnik,
+            email=u_email,
+            geslo=password_hash.decode(),
+            datum_reg=datetime.today().isoformat()
+            )
 
         self.repo.dodaj_uporabnika(u)
-
-        return UporabnikiDto(username=uporabnik)
+        
+        return UporabnikiDto(ime=uporabnik)

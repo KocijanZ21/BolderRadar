@@ -27,11 +27,14 @@
             <label for="password">Geslo:</label>
             <input type="password" id="password" name="password" required>
     
-            <button class="button" type="submit" style="margin: 10px;">Prijava</button>
+            <button class="button" type="submit" style="margin: 0px;">Prijava</button>
         </form>
     </div>  
-    <!---->
+    %if napaka:
+              <p style="text-align: center;">{{napaka}}</p>
+    %end
+    
 
-<p style="text-align: center;">Don't have account? <a href="/registracija">Register here</a>.</p>
+<p style="text-align: center;">Don't have account? <a href="/registracija">Registracija</a>.</p>
 </body>
 </html>

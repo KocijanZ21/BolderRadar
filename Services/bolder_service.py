@@ -50,7 +50,7 @@ class BolderjiService:
             opis=b_opis,
             sektor_ime=b_sektor,
             parkirisce_ime=b_parkirisce,
-            datum_dod= date.today()
+            datum_dod= datetime.today()
         )
         
         self.repo.dodaj_bolder(b) # a dela? Če ne v to vrstico naštej vsakega posebej

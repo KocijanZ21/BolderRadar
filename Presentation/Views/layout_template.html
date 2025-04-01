@@ -24,30 +24,31 @@
         <div class="nav-links">
             <a href="/" { if request.path = '/' } style="background-color: #ffda6c;" {% end}>MAP</a>
             <a href="/boulder-info" { if request.path = '/boulder-info' } style="background-color: #ffda6c;" {% end}>BOULDER</a>
-            <a href="/submitboulder" { if request.path = '/submitboulder' } style="background-color: #ffda6c;" {% end}>SUBMIT BOULDER</a>
-            <a href="/aboutus" { if request.path = '/aboutus' } style="background-color: #ffda6c;" {% end}>ABOUT US</a>
+            <a href="/dodaj_bolder" { if request.path = '/dodaj_bolder' } style="background-color: #ffda6c;" {% end}>DODAJ BOLDER</a>
+            <a href="/aboutus" { if request.path = '/aboutus' } style="background-color: #ffda6c;" {% end}>O NAS</a>
         </div>
-    </div>
-        <!-- Ker pisano v janja2, je skos "aktivno" (svetlo) stanje. Popravi v maki (al karkol že je) -->
 
         <!-- Right: Login Button -->
         <div class="login-container">
-            % if request.get_cookie('uporabnik'):
+            % if uporabnik:
                 <details>
-                    <summary>${'uporabnik'}</summary>     <!---->
+                    <summary>{{uporabnik}}</summary>     <!---->
                     <div class="logout-dialog">
                         <p>Are you sure you want to logout?</p>
-                        <a href="/logout" class="button">Yes</a>
+                        <a href="/odjava" class="button">Yes</a>
                         <button onclick="this.closest('details').removeAttribute('open')" class="button">Cancel</button>
                     </div>
                 </details>
             % else:
-            <a href="/prijava" class="button" style="font-size: large;">Prijava</a>
-            %end
+            <a href="/prijava" class="button" style="font-size: large; position: absolute; right: 15px">Prijava</a>
+            % end
             
         </div>
+    </div>
+        <!-- Ker pisano v janja2, je skos "aktivno" (svetlo) stanje. Popravi v maki (al karkol že je) -->
 
-    <div class="centered-box" style="width: 95%; display: flex; margin-top: 10px; justify-content: center; align-items: center; height: max-content;">
+
+    <div class="centered-box" style="width: 95%; margin-top: 10px; justify-content: center; align-items: center; height: max-content;">
         {{!base}}
     </div>     
 </body>

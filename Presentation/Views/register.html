@@ -8,21 +8,21 @@
 </head>
 <body>
     <div class="top-nav">
-        <a href="/login" class="button">Prijava</a>
+        <a href="/prijava" class="button">Prijava</a>
         <a href="/registracija" class="button">Registracija</a>
     </div>
     <div class="home-button-container">
         <a href="/" class="home-button">
             <img src="/static/Logo2.png" alt="Home" class="home-icon">
         </a>
-        <h2 style="font-size: 30px;">Register</h2>
+        <h2 style="font-size: 30px;">Registracija</h2>
     </div>
     <br>
     <br>
     <div class="centered-box" style="display: flex; justify-content: center; align-items: center; margin-top: 10vh;">
         <form action="/registracija" method="POST", class="form-grid">
-            <label for="username">Ime:</label>
-            <input type="text" id="username" name="username" required>
+            <label for="ime">Ime:</label>
+            <input type="text" id="ime" name="ime" required>
 
             <label for="email">Email:</label>
             <input type="email" id="email" name="email" required>
@@ -33,8 +33,10 @@
             <button type="submit" class="button" style="margin: 10px;">Registracija</button>
         </form>
     </div> 
-
-    <!---->
+    %if napaka:
+              <p style="text-align: center;">{{napaka}}</p>
+    %end
+    
 <p style="text-align: center;">Already have an account? <a href="/prijava">Login here</a>.</p>
 </body>
 </html>

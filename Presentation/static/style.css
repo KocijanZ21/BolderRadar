@@ -29,6 +29,7 @@ body {
     font-weight: bold; /* Bold text */
     border: 2px solid black; /* Black border */
     transition: background-color 0.3s; /* Smooth color transition */
+    cursor: pointer;
 }
 
 
@@ -94,7 +95,6 @@ h2 {                                        /* ???? */
 
 /* Container for positioning the home button */
 .home-button-container {                /* Pogruntaj kako v layout */
-    position: absolute;
     width: 100%;
     background-color: #FBBC04;
 }
@@ -153,7 +153,7 @@ h2 {                                        /* ???? */
 .navbar .login-container {
     display: flex;
     align-items: center;
-    margin-left: auto !important; /* Potisne gumb na desno */
+    margin-left: auto !important; /* Potisne gumb na desno */    /* Ne dela for some reason */
 }
 
 

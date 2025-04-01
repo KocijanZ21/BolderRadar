@@ -20,7 +20,7 @@ class Repo:
 
     def dobi_uporabnike(self) -> List[Uporabniki]:
         self.cur.execute("""
-            SELECT * FROM uporabniki
+            SELECT * FROM Uporabniki
             Order by datum_reg desc
         """)
         uporabniki = [Uporabniki.from_dict(u) for u in self.cur.fetchall()]
@@ -94,13 +94,15 @@ class Repo:
         return self.cur.fetchall()
     
 
-    def dobi_uporabnika(self, ime:str) -> Uporabniki:
+    def dobi_uporabnika(self, email:str) -> Uporabniki:
         self.cur.execute("""
-            SELECT id, ime, email, geslo, datum_reg
-            FROM Bolderji
-            WHERE ime = %s
-             """, (ime,))
+            SELECT id, ime, email, geslo, datum_registracije
+            FROM Uporabniki
+            WHERE email = %s
+             """, (email,))
+        
         b = Uporabniki.from_dict(self.cur.fetchone())
+        print('repo uporabnik', b)
         return b
 
     def dobi_bolder(self, ime:str) -> Bolderji:
@@ -141,7 +143,7 @@ class Repo:
     
     def dodaj_uporabnika(self, uporabnik: Uporabniki):
         self.cur.execute("""
-            INSERT into uporabniki(ime, email, geslo, datum_reg)
+            INSERT into uporabniki(ime, email, geslo, datum_registracije)
             VALUES (%s, %s, %s, %s)
             """, (uporabnik.ime, uporabnik.email, uporabnik.geslo, uporabnik.datum_reg))
         self.conn.commit()
@@ -227,5 +229,10 @@ class Repo:
         """, (id,))
         self.conn.commit()
     
-
+    def odstrani_parkirisce(self, id):
+        self.cur.execute("""
+            DELETE from parkirisca
+            WHERE id = %s
+        """, (id,))
+        self.conn.commit()
 
