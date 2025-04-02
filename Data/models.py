@@ -48,7 +48,6 @@ class Sektorji:
     lat : float = field(default=0)
     lng : float=field(default=0) 
     opis : str=field(default="")
-    parkirisce_id : int=field(default=0)
 
 
 @dataclass_json

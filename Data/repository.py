@@ -102,7 +102,6 @@ class Repo:
              """, (email,))
         
         b = Uporabniki.from_dict(self.cur.fetchone())
-        print('repo uporabnik', b)
         return b
 
     def dobi_bolder(self, ime:str) -> Bolderji:
@@ -151,9 +150,9 @@ class Repo:
     
     def dodaj_sektor(self, sektor: Sektorji):
         self.cur.execute("""
-            INSERT into sektor(ime, lat, lng, opis, parkirisce_id)
+            INSERT into sektorji(ime, pokrajina, lat, lng, opis)
             VALUES (%s, %s, %s, %s, %s)
-            """, (sektor.ime, sektor.lat, sektor.lng, sektor.opis, sektor.parkirisce))
+            """, (sektor.ime, sektor.pokrajina, sektor.lat, sektor.lng, sektor.opis))
         self.conn.commit()
     
     def dodaj_parkirisce(self, parkirisce: Parkirisca):
@@ -166,24 +165,13 @@ class Repo:
     def dodaj_bolder(self, ime, lat, lng, opis, sektor_ime, parkirisce_ime, datum_dod): 
         # Doda nov bolder, pri čemer poskrbi, da sektor in parkirišče obstajata.
         
-        # Preverimo, ali parkirišče že obstaja, če ne, ga dodamo
-        self.cur.execute("SELECT id FROM parkirisca WHERE ime = %s;", (parkirisce_ime,))
-        parkirisce = self.cur.fetchone()
-
-        if not parkirisce:
-            novo_parkirisce = Parkirisca(ime=parkirisce_ime, lat=lat, lng=lng, opis="Samodejno dodano")
-            self.dodaj_parkirisce(novo_parkirisce)
-            self.cur.execute("SELECT id FROM parkirisca WHERE ime = %s;", (parkirisce_ime,))
-            parkirisce = self.cur.fetchone()
-
-        parkirisce_id = parkirisce["id"]
-
+    
         # Preverimo, ali sektor že obstaja, če ne, ga dodamo
         self.cur.execute("SELECT id FROM sektorji WHERE ime = %s;", (sektor_ime,))
         sektor = self.cur.fetchone()
 
         if not sektor:
-            nov_sektor = Sektorji(ime=sektor_ime, lat=lat, lng=lng, opis="Samodejno dodano", parkirisce=parkirisce_id)
+            nov_sektor = Sektorji(ime=sektor_ime, lat=lat, lng=lng, opis="Samodejno dodano")
             self.dodaj_sektor(nov_sektor)
             self.cur.execute("SELECT id FROM sektorji WHERE ime = %s;", (sektor_ime,))
             sektor = self.cur.fetchone()
@@ -195,11 +183,9 @@ class Repo:
             INSERT INTO bolderji (ime, opis, sektor_id, parkirisce_id, lat, lng)
             VALUES (%s, %s, %s, %s, %s, %s)
             RETURNING id;
-        """, (ime, opis, sektor_id, parkirisce_id, lat, lng))
+        """, (ime, opis, sektor_id, lat, lng))
 
         self.conn.commit()
-
-        return self.cur.fetchone()["id"]  # Vrne ID novega bolderja
 
 
     def dodaj_smer(self, ime, tezavnost, opis, bolder_ime):

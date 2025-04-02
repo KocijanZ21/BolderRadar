@@ -22,7 +22,6 @@ class AuthService:
         # Najprej dobimo uporabnika iz baze
         try:
             user = self.repo.dobi_uporabnika(uporabnik)
-            print('service user', user)
         except:
             return False
         # Preverimo, če je geslo pravilno

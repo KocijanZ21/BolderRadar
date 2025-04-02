@@ -9,7 +9,7 @@ auth = AuthService()
 service = BolderjiService()
 
 # privzete nastavitve
-SERVER_PORT = os.environ.get('BOTTLE_PORT', 8083)
+SERVER_PORT = os.environ.get('BOTTLE_PORT', 8084)
 RELOADER = os.environ.get('BOTTLE_RELOADER', True)
 
 
@@ -45,7 +45,8 @@ def index():
 
 @get('/aboutus')
 def about_us():
-    return template('about_us.html', request=request)
+    uporabnik = request.get_cookie("uporabnik")
+    return template('about_us.html', request=request, uporabnik=uporabnik)
 
 
 @get('/prijava')
@@ -106,21 +107,35 @@ def registracija_post():
 @get('/dodaj_bolder')
 def dodaj_bolder_get():
     uporabnik = request.get_cookie("uporabnik")
-    return template('submit_boulder_form.html', uporabnik=uporabnik, request=request)
+    return template('submit_boulder_form.html', uporabnik=uporabnik, request=request, sektor_msg=None)
 
-@post('/dodaj_bolder')
+@post('/dodaj_bolder')   #malo še počakam
 def dodaj_bolder_post():
     """
     Dodajanje bolderja v tabelo bolderji.
     """
-    ime = request.forms.getunicode('ime')
-    lat = request.forms.get('lat')
-    lng = request.forms.get('lng')
-    opis = request.forms.getunicode('opis')
+    ime = request.forms.getunicode('b_ime')
+    lat = request.forms.get('b_lat')
+    lng = request.forms.get('b_lng')
+    opis = request.forms.get('b_opis')
     sektor = request.forms.get('sektor')
-    parkirisca = request.forms.get('parkirisca')
-    service.dodaj_bolder(ime, lat, lng, opis, sektor, parkirisca)
+    service.dodaj_bolder(ime, lat, lng, opis, sektor)
     redirect(url('index'))
+
+@post('/dodaj_parkirisce')
+def dodaj_parkirisce():
+    print("Parkirišče dodano!")
+    return "Uspešno dodano!"
+
+@post('/dodaj_sektor')
+def dodaj_sektor():
+    ime = request.forms.getunicode('s_ime')
+    pokrajina = request.forms.get('pokrajina')
+    lat = request.forms.get('s_lat')
+    lng = request.forms.get('s_lng')
+    opis = request.forms.get('s_opis')
+    service.dodaj_sektor(ime, pokrajina, lat, lng, opis)
+    return template('submit_boulder_form.html', uporabnik=request.get_cookie("uporabnik"), sektor_msg="Sektor uspešno dodan!", request=request)
 
 
 

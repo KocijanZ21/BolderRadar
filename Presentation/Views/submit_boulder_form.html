@@ -25,31 +25,83 @@
             button.parentElement.remove();
         }
     </script>
-    <form method="POST" action="/dodaj_bolder" enctype="multipart/form-data">
-        <label for="ime">Ime bolderja:</label>
-        <input type="text" id="ime" name="ime" required>
+    <div class="form-content">
+        <label for="b_ime">Ime bolderja:</label>
+        <input type="text" id="b_ime" name="b_ime" required>
         <br>
         <br>
         <label for="boulder_coordinates">Koordinate:</label><br>
-        <input type="number" id="lat" name="lat" placeholder="Zemljepisna širina" required>
-        <input type="number" id="lng" name="lng" placeholder="Zemljepisna dolžina" required><br>
+        <input type="number" id="b_lat" name="b_lat" placeholder="Zemljepisna širina" required>
+        <input type="number" id="b_lng" name="b_lng" placeholder="Zemljepisna dolžina" required><br>
         <br>
-        <label for="opis">Opis:</label><br>
-        <textarea name="opis" cols="40" rows="5" placeholder="Navodila do bolderja ipd." required></textarea>
-        <br>
-        <br>
-        <label for="boulder_important_notice">Sektor:</label><br>
-        <textarea name="sektor" cols="40" rows="2" placeholder="Če samo en bolder v okolici, lahko ime bolderja" required ></textarea>
+        <label for="b_opis">Opis:</label><br>
+        <textarea name="b_opis" cols="40" rows="5" placeholder="Navodila do bolderja ipd." required></textarea>
         <br>
         <br>
-        <form action="/dodaj-parkirisce" method="POST">  <!-- še ne obstaja -->
-            <button type="submit" class="button">Dodaj parkirišče</button>
-        </form>
+        <label for="Sektor">Sektor:</label>
+        <input type="text" id="sektor" name="sektor" placeholder="Ime sektorja" required >
+        <br> Sektor še ne obstaja? 
+        <br>
+        <details>
+            <summary>Dodaj sektor</summary>
+            <form action="/dodaj_sektor" method="post">
+                <label for="s_ime">Ime sektorja:</label><br>
+                <input type="text" id="s_ime" name="s_ime" required>
+                <br>
+                <br>
+    
+                <label for="pokrajina">Pokrajina:</label><br>
+            <select id="pokrajina" name="pokrajina" required>
+                <option value="Gorenjska">Gorenjska</option>
+                <option value="Štajerska">Štajerska</option>
+                <option value="Prekmurje">Prekmurje</option>
+                <option value="Koroška">Koroška</option>
+                <option value="Notranjska">Notranjska</option>
+                <option value="Primorska">Primorska</option>
+                <option value="Dolenjska">Dolenjska</option>
+            </select><br><br>
+    
+                <label for="sector_coordinates">Koordinate sektorja:</label><br>
+                <input type="number" id="s_lat" name="s_lat" placeholder="Zemljepisna širina" required>
+                <input type="number" id="s_lng" name="s_lng" placeholder="Zemljepisna dolžina" required><br><br>
+    
+                <label for="sopis">Opis:</label><br>
+                <textarea id="s_opis" name="s_opis" required></textarea><br><br>
+    
+                <input type="submit" value="Dodaj sektor">
+            </form>
+        </details>
+        % if sektor_msg:
+        <p style="color: green; font-weight: bold;">{{ sektor_msg }}</p>
+        % end
         
+        <!--
+        <label for="p_ime">Parkirišče:</label>
+        <input type="text" id="p_ime" name="p_ime">
+        <br> Parkirišče še ne obstaja? <br>
+        <details>
+            <summary>Dodaj parkirišče</summary>
+            <form action="/dodaj_parkirisce" method="post">
+                <label for="p_ime">Ime parkirišča:</label><br>
+                <input type="text" id="p_ime" name="p_ime" required><br><br>
+    
+                <label for="p_lat">Zemljepisna širina:</label><br>
+                <input type="number" id="p_lat" name="p_lat" required><br><br>
+    
+                <label for="p_lng">Zemljepisna dolžina:</label><br>
+                <input type="number" id="p_lng" name="p_lng" required><br><br>
+    
+                <label for="p_opis">Opis:</label><br>
+                <textarea id="p_opis" name="p_opis" required></textarea><br><br>
+    
+                <input type="submit" value="Dodaj parkirišče">
+            </form>
+        </details>
+        -->
 
         <hr>
 
-        <div id="route-list">
+        <div class="routes-container">
             <!-- Dynamic route inputs will be added here -->
             <div class="route-item">
                 <input type="number" name="route_numbers[]" placeholder="Enter route number" required>
@@ -59,10 +111,10 @@
                 <button type="button" onclick="removeRoute(this)">Remove</button>
             </div>
         </div>
-        <button type="button" onclick="addRoute()">Add Another Route</button><br><br>
+        <button class="small-button" onclick="addRoute()">Add Another Route</button><br><br>
 
         <button class="button">Dodaj bolder</button>
-    </form>
+    </div>
 % else:
     Za dodajanje bolderjev morate biti prijavljeni.
 % end
