@@ -115,17 +115,21 @@ class Repo:
         
     def dobi_sektor(self, ime:str) -> Sektorji:
         self.cur.execute("""
-            SELECT id, ime, lat, lng, opis, parkirisce
-            FROM Sektorji
+            SELECT id, ime, lat, lng, opis
+            FROM sektorji
             WHERE ime = %s
              """, (ime,))
-        s = Sektorji.from_dict(self.cur.fetchone())
+        sektor_podatki = self.cur.fetchone()  # Fetch result
+    
+        if sektor_podatki is None:
+            return None  # Če sektor ne obstaja, vrni None
+        s = Sektorji.from_dict(sektor_podatki)
         return s
     
     def dobi_parkirisce(self, ime:str) -> Parkirisca:
         self.cur.execute("""
             SELECT id, ime, lat, lng, opis
-            FROM Parkirisca
+            FROM parkirisca
             WHERE ime = %s
              """, (ime,))
         p = Parkirisca.from_dict(self.cur.fetchone())
@@ -162,28 +166,23 @@ class Repo:
             """, (parkirisce.ime, parkirisce.lat, parkirisce.lng, parkirisce.opis))
         self.conn.commit()
     
-    def dodaj_bolder(self, ime, lat, lng, opis, sektor_ime, parkirisce_ime, datum_dod): 
-        # Doda nov bolder, pri čemer poskrbi, da sektor in parkirišče obstajata.
+    def dodaj_bolder(self, ime, lat, lng, opis, sektor_ime, datum_dod): 
         
-    
         # Preverimo, ali sektor že obstaja, če ne, ga dodamo
         self.cur.execute("SELECT id FROM sektorji WHERE ime = %s;", (sektor_ime,))
         sektor = self.cur.fetchone()
+        if sektor:
+            sektor_id = sektor[0]  # ID sektorja
+        else:
+            print("Sektor ne obstaja")
 
-        if not sektor:
-            nov_sektor = Sektorji(ime=sektor_ime, lat=lat, lng=lng, opis="Samodejno dodano")
-            self.dodaj_sektor(nov_sektor)
-            self.cur.execute("SELECT id FROM sektorji WHERE ime = %s;", (sektor_ime,))
-            sektor = self.cur.fetchone()
-
-        sektor_id = sektor["id"]
 
         # Zdaj lahko dodamo bolder s pridobljenim sektor_id in parkirisce_id
         self.cur.execute("""
-            INSERT INTO bolderji (ime, opis, sektor_id, parkirisce_id, lat, lng)
+            INSERT INTO bolderji (ime, lat, lng, opis, sektor_id, datum_dodajanja)
             VALUES (%s, %s, %s, %s, %s, %s)
             RETURNING id;
-        """, (ime, opis, sektor_id, lat, lng))
+        """, (ime, lat, lng, opis, sektor_id, datum_dod))
 
         self.conn.commit()
 

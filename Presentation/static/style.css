@@ -171,13 +171,6 @@ h2 {                                        /* ???? */
     
 }
 
-.form-content {
-    flex-direction: column;
-    align-items: center;
-    width: 60%; /* Nastavi širino vsebine */
-}
-
-
 
 /* Style the top navigation bar */
  .top-nav {                                               /* Ne vidi ničesar??? */
@@ -208,10 +201,21 @@ summary {                           /* Nisem še tok daleč, zaenkrat še ne tik
     list-style: none;
 }
 
+form {
+    width: 100%; /* Naj zavzamejo celotno širino */
+    margin-bottom: 20px; /* Doda razmik med obrazcema */
+}
+
+hr.divider {
+    border: 0; /* Odstrani privzeti rob */
+    border-top: 3px solid #000; /* Tukaj nastaviš debelino in barvo črte */
+    margin: 20px 0; /* Razmik nad in pod črto */
+  }
+
 /* Style the dialog content */
 details {                           /* Nisem še tok daleč, zaenkrat še ne tikamo */
     position: relative;
-    display: inline-block;
+    display: block;
 }
 
 .logout-dialog {                    /* Nisem še tok daleč, zaenkrat še ne tikamo */
