@@ -10,7 +10,7 @@ auth = AuthService()
 service = BolderjiService()
 
 # privzete nastavitve
-SERVER_PORT = os.environ.get('BOTTLE_PORT', 8083)
+SERVER_PORT = os.environ.get('BOTTLE_PORT', 8088)
 RELOADER = os.environ.get('BOTTLE_RELOADER', True)
 
 
@@ -41,7 +41,6 @@ def index():
     sektorji = [{
     "id": s.id, "ime": s.ime, "lat": s.lat, "lng": s.lng, "opis": s.opis
     } for s in service.dobi_sektorje()]
-    print(sektorji)
     sektorji_json = json.dumps(sektorji)  # Seriliziraj seznam sektorjev v JSON
 
     email = request.get_cookie('email')
@@ -128,7 +127,7 @@ def dodaj_bolder_post():
     opis = request.forms.get('b_opis')
     sektor = request.forms.get('sektor')
 
-    if service.dobi_sektor(sektor) is None:
+    if service.dobi_sektor_ime(sektor) is None:
         return template('submit_boulder_form.html', uporabnik=request.get_cookie("uporabnik"), sektor_msg="Ta sektor še ne obstaja.", request=request)
 
     service.dodaj_bolder(ime, lat, lng, opis, sektor)
@@ -152,9 +151,45 @@ def dodaj_sektor():
 
 @post('/dodaj_smer')
 def dodaj_smer():
-    ime = request.forms.get('smer_ime')
+    ime = request.forms.get('ime')
     tezavnost = request.forms.get('tezavnost')
-    opis = request.forms.get('smer_opis')
+    opis = request.forms.get('opis')
+    bolder_id = request.forms.get('bolder_id')
+    print('b id', bolder_id)
+    service.dodaj_smer(ime, tezavnost, opis, bolder_id)
+    
+    # 🔁 Preusmeri nazaj na bolder_info s tem id-jem
+    redirect(f'/bolder_info?id={bolder_id}')
+
+@get('/sektor_info')
+def sektor_info():
+    uporabnik = request.get_cookie("uporabnik")
+    sektor_id = request.query.id
+    sektor = service.dobi_sektor_id(sektor_id)
+    bolderji=service.dobi_bolderje_sektor(sektor.ime)
+    parkirisca=service.dobi_parkirisca_sektor(sektor.ime)
+    return template('sector_info.html', uporabnik=uporabnik, request=request, sektor=sektor, bolderji=bolderji, parkirisca=parkirisca)
+
+@get('/bolder_info')
+def bolder_info():
+    uporabnik = request.get_cookie("uporabnik")
+    bolder_id = request.query.id
+    print('app id', bolder_id)
+    bolder = service.dobi_bolder_id(bolder_id)
+    print('app', bolder)
+    smeri=service.dobi_smeri_bolder(bolder.ime)
+    print('smeri', smeri)
+    sektor=service.dobi_sektor_id(bolder.sektor_id)
+    parkirisca=service.dobi_parkirisca_bolder(bolder.ime)
+    return template('boulder_info.html', uporabnik=uporabnik, request=request, bolder=bolder, sektor=sektor, smeri=smeri, parkirisca=parkirisca)
+
+@get('/parkirisce_info')   # very much not okej, ampak maš na nečem za delat
+def parkirisce_info():
+    uporabnik = request.get_cookie("uporabnik")
+    parkirisce_id = request.query.id
+    parkirisce = service.dobi_parkirisce(parkirisce_id)
+    #sektor=service.dobi_sektor_ime(parkirisce.sektor)
+    return template('parkirisce_info.html', uporabnik=uporabnik, request=request, parkirisce=parkirisce)
 
 
 
