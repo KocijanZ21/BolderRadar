@@ -3,27 +3,7 @@
 <!-- še veliko dela. Preveri povezave do funkcij, naredi funkcije, povezava do tabelc!!! -->
 
 % if uporabnik:
-    <script>
-        // Function to add a new route input field
-        function addRoute() {
-            const routeList = document.getElementById("route-list");
-            const newRoute = document.createElement("div");
-            newRoute.classList.add("route-item");
 
-            newRoute.innerHTML = `
-                <input type="number" name="route_numbers[]" placeholder="Številka smeri" required>
-                <input type="text" name="route_names[]" placeholder="Ime smeri" required>
-                <input type="text" name="route_grades[]" placeholder="Ocena smeri" required>
-                <button type="button" onclick="removeRoute(this)">Odstrani</button>
-            `;
-            routeList.appendChild(newRoute);
-        }
-
-        // Function to remove a route input field
-        function removeRoute(button) {
-            button.parentElement.remove();
-        }
-    </script>
     <div class="form-content">
         <h2>Dodaj bolder</h2>
         <form action="/dodaj_bolder" method="POST">
@@ -48,44 +28,6 @@
             <p style="color: green; font-weight: bold;">{{ sektor_msg }}</p>
             % end
 
-            <!--
-            <label for="p_ime">Parkirišče:</label>
-            <input type="text" id="p_ime" name="p_ime">
-            <br> Parkirišče še ne obstaja? <br>
-            <details>
-                <summary>Dodaj parkirišče</summary>
-                <form action="/dodaj_parkirisce" method="post">
-                    <label for="p_ime">Ime parkirišča:</label><br>
-                    <input type="text" id="p_ime" name="p_ime" required><br><br>
-                
-                    <label for="p_lat">Zemljepisna širina:</label><br>
-                    <input type="number" id="p_lat" name="p_lat" required><br><br>
-                
-                    <label for="p_lng">Zemljepisna dolžina:</label><br>
-                    <input type="number" id="p_lng" name="p_lng" required><br><br>
-                
-                    <label for="p_opis">Opis:</label><br>
-                    <textarea id="p_opis" name="p_opis" required></textarea><br><br>
-                
-                    <input type="submit" value="Dodaj parkirišče">
-                </form>
-            </details>
-            -->
-
-            <!--<hr> -->
-<!--
-            <div class="routes-container"> -->
-                <!-- Dynamic route inputs will be added here -->
-                <!--
-                <div class="route-item">
-                    <input type="number" name="route_numbers[]" placeholder="Enter route number" required>
-                    <input type="text" id = "route_names[]" placeholder="Enter route name" required>
-                    <input type="text" name="route_grades[]" placeholder="Enter route grade" required>
-                    <button type="button" onclick="removeRoute(this)">Remove</button>
-                </div>
-            </div>
-            <button type="button" class="small-button" onclick="addRoute()">Add Another Route</button><br><br>
-        -->
             <button class="button" type="submit" style="margin: 0px;">Dodaj bolder</button>
         </form>
     </div>

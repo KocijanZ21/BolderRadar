@@ -1,4 +1,4 @@
-%rebase('layout_template.html', naslov='Boulder Radar')
+%rebase('layout_template.html', naslov='Bolder Radar')
         
 <div class="map-container">
     <div id="map"></div>
@@ -18,7 +18,6 @@
 </div>
 <script>
     var sektorji = {{!sektorji}};
-    console.log("Sektorji:", sektorji);  // testno
 </script>
 
 
@@ -39,7 +38,7 @@
                 content.querySelector("#description").innerText = description;
                 let detail_button = content.querySelector("#details-button");
                 
-                detail_button.setAttribute("onclick",`location.href='/boulder-info?id=${sektor_id}&approving=False'`);
+                detail_button.setAttribute("onclick",`location.href='/sektor_info?id=${sektor_id}'`);
                 //detail_button.onclick = function(){console.log("YEP")};  
                 // console.log(detail_button);
                 // detail_button.addEventListener("click", function(){

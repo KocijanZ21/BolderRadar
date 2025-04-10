@@ -55,12 +55,12 @@ h2 {                                        /* ???? */
 
 .routes-table {                     /* Nisem še tok daleč, zaenkrat še ne tikamo */
     border-collapse: collapse;
-    width: 47%;
+    width: 100%;
 }
 
 .routes-table th, .routes-table td {    /* Nisem še tok daleč, zaenkrat še ne tikamo */
     border: 1px solid #ddd;
-    padding: 8px;
+    padding: 10px;
 }
 
 .routes-table th {                      /* Nisem še tok daleč, zaenkrat še ne tikamo */
@@ -296,11 +296,10 @@ details {                           /* Nisem še tok daleč, zaenkrat še ne tik
 }
 
 .small-button {
-    background-color: #ccc; /* Nevtralna barva */
     color: black;
     border: 1px solid #888;
-    padding: 5px 10px;
-    font-size: 14px;
+    padding: 3px 5px;
+    font-size: 13px;
     cursor: pointer;
     border-radius: 4px;
 }

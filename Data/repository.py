@@ -71,11 +71,22 @@ class Repo:
     def dobi_parkirisca_sektor(self, sektor:str) -> List[Parkirisca]:
         self.cur.execute("""
             SELECT p.* FROM parkirisca p
-            JOIN sektorji s ON p.sektor_id = s.id
+            JOIN sektor_parkirisce sp ON p.id = sp.parkirisce_id
+            JOIN sektorji s ON s.id = sp.sektor_id
             WHERE s.ime = %s;
              """, (sektor,))
         s_parkirisca = [Parkirisca.from_dict(p) for p in self.cur.fetchall()]
         return s_parkirisca
+    
+    def dobi_parkirisca_bolder(self, bolder:str) -> List[Parkirisca]:
+        self.cur.execute("""
+            SELECT p.* FROM parkirisca p
+            JOIN bolder_parkirisce bp ON p.id = bp.parkirisce_id
+            JOIN bolderji b ON b.id = bp.bolder_id
+            WHERE b.ime = %s;
+             """, (bolder,))
+        b_parkirisca = [Parkirisca.from_dict(p) for p in self.cur.fetchall()]
+        return b_parkirisca
     
     def dobi_smeri(self) -> List[Smeri]:
         self.cur.execute("""
@@ -91,7 +102,8 @@ class Repo:
             JOIN bolderji b ON s.bolder_id = b.id
             WHERE b.ime = %s;
              """, (bolder,))
-        return self.cur.fetchall()
+        b_smeri = [Smeri.from_dict(s) for s in self.cur.fetchall()]
+        return b_smeri
     
 
     def dobi_uporabnika(self, email:str) -> Uporabniki:
@@ -104,7 +116,7 @@ class Repo:
         b = Uporabniki.from_dict(self.cur.fetchone())
         return b
 
-    def dobi_bolder(self, ime:str) -> Bolderji:
+    def dobi_bolder_ime(self, ime:str) -> Bolderji:
         self.cur.execute("""
             SELECT id, ime, lat, lng, opis, sektor, parkirisce, datum_dod
             FROM Bolderji
@@ -112,8 +124,18 @@ class Repo:
              """, (ime,))
         b = Bolderji.from_dict(self.cur.fetchone())
         return b
+    
+    def dobi_bolder_id(self, id:int) -> Bolderji:
+        self.cur.execute("""
+            SELECT id, ime, lat, lng, opis, sektor_id, datum_dodajanja
+            FROM bolderji
+            WHERE id = %s
+             """, (id,))
+        b = Bolderji.from_dict(self.cur.fetchone())
+        print('repo bolder', b)
+        return b
         
-    def dobi_sektor(self, ime:str) -> Sektorji:
+    def dobi_sektor_ime(self, ime:str) -> Sektorji:
         self.cur.execute("""
             SELECT id, ime, lat, lng, opis
             FROM sektorji
@@ -126,12 +148,24 @@ class Repo:
         s = Sektorji.from_dict(sektor_podatki)
         return s
     
-    def dobi_parkirisce(self, ime:str) -> Parkirisca:
+    def dobi_sektor_id(self, id:int) -> Sektorji:
+        self.cur.execute("""
+            SELECT id, ime, lat, lng, opis
+            FROM sektorji
+            WHERE id = %s
+             """, (id,))
+        sektor_podatki = self.cur.fetchone()
+        if sektor_podatki is None:
+            return None
+        s = Sektorji.from_dict(sektor_podatki)
+        return s
+    
+    def dobi_parkirisce(self, id:int) -> Parkirisca:
         self.cur.execute("""
             SELECT id, ime, lat, lng, opis
             FROM parkirisca
-            WHERE ime = %s
-             """, (ime,))
+            WHERE id = %s
+             """, (id,))
         p = Parkirisca.from_dict(self.cur.fetchone())
         return p
     
@@ -187,15 +221,10 @@ class Repo:
         self.conn.commit()
 
 
-    def dodaj_smer(self, ime, tezavnost, opis, bolder_ime):
+    def dodaj_smer(self, ime, tezavnost, opis, bolder_id):
 # Preverimo, ali sektor že obstaja, če ne, ga dodamo
-        self.cur.execute("SELECT id FROM sektorji WHERE ime = %s;", (bolder_ime,))
-        bolder = self.cur.fetchone()
-
-        bolder_id = bolder["id"]
-
         self.cur.execute("""
-            INSERT into smer(ime, tezavnost, opis, bolder_id)
+            INSERT into smeri(ime, tezavnost, opis, bolder_id)
             VALUES (%s, %s, %s, %s)
             """, (ime, tezavnost, opis, bolder_id))
         self.conn.commit()

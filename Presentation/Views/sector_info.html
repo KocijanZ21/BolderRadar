@@ -1,0 +1,71 @@
+% rebase('layout_template.html', naslov='Sektor info')
+
+<div  style="margin-top: 10px;">
+    <div style="border: 3px solid black; background-color: #FBBC04; margin-bottom: 10px; text-align: center">
+        <h2> {{sektor.ime}}</h2>
+        <label>sektor.pokrajina</label><br>
+        <label id="coordinates"> ({{sektor.lat}}, {{sektor.lng}}) </label>
+        <label id="icon" style="font-size: small; font-style: italic;"></label>
+        
+    </div>
+{{sektor.opis}}
+<hr>
+
+<h2>Bolderji </h2>
+<table class="routes-table">
+    <thead>
+        <tr>
+            <th>Ime</th>
+            <th>Koordinate</th>
+            <th>Opis</th>
+
+        </tr>
+    </thead>
+    <tbody>
+    % for bolder in bolderji:
+        <tr>
+            <td>
+                <a href="/bolder_info?id={{bolder.id}}">{{bolder.ime}}</a>
+            </td>
+            <td>{{bolder.lat}}, {{bolder.lng}}</td>
+            <td>{{bolder.opis}}</td>
+            
+        </tr>
+    % end
+    </tbody>
+</table>
+
+<form action="/dodaj_bolder" method="get">
+    <button class="small-button" type="submit">➕ Dodaj bolder</button>
+</form>
+
+<hr>
+
+<h2>Parkirišča povezana s sektorjem</h2>
+<table class="routes-table">
+    <thead>
+        <tr>
+            <th>Ime</th>
+            <th>Koordinate</th>
+            <th>Opis</th>
+            
+        </tr>
+    </thead>
+    <tbody>
+    % for park in parkirisca:
+        <tr>
+            <td>
+                <a href="/park_info?id=${park.id}">{{park.ime}}</a>
+            </td>
+            <td>{{park.lat}}, {{park.lng}}</td>
+            <td>{{park.opis}}</td>
+            
+        </tr>
+    % end
+    </tbody>
+</table>
+
+<form action="/dodaj_parkirisce" method="get">
+    <input type="hidden" name="sektor_id" value="${sektor.id}">
+    <button class="small-button" type="submit">➕ Dodaj parkirišče</button>
+</form>
