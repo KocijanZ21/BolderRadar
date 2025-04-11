@@ -119,7 +119,7 @@ class Repo:
     def dobi_bolder_ime(self, ime:str) -> Bolderji:
         self.cur.execute("""
             SELECT id, ime, lat, lng, opis, sektor, parkirisce, datum_dod
-            FROM Bolderji
+            FROM bolderji
             WHERE ime = %s
              """, (ime,))
         b = Bolderji.from_dict(self.cur.fetchone())
@@ -132,7 +132,6 @@ class Repo:
             WHERE id = %s
              """, (id,))
         b = Bolderji.from_dict(self.cur.fetchone())
-        print('repo bolder', b)
         return b
         
     def dobi_sektor_ime(self, ime:str) -> Sektorji:
@@ -194,23 +193,25 @@ class Repo:
         self.conn.commit()
     
     def dodaj_parkirisce(self, parkirisce: Parkirisca):
+        print('pride do repo')
         self.cur.execute("""
-            INSERT into bolder(ime, lat, lng, opis)
+            INSERT into parkirisca(ime, lat, lng, opis)
             VALUES (%s, %s, %s, %s)
+            RETURNING id;
             """, (parkirisce.ime, parkirisce.lat, parkirisce.lng, parkirisce.opis))
+        print('pride iz repo')
+        parkirisce_id = self.cur.fetchone()[0]
+        print('repo park id', parkirisce_id)
         self.conn.commit()
+        return parkirisce_id  # Vrnemo ID parkirišča, ki smo ga dodali
     
     def dodaj_bolder(self, ime, lat, lng, opis, sektor_ime, datum_dod): 
         
         # Preverimo, ali sektor že obstaja, če ne, ga dodamo
         self.cur.execute("SELECT id FROM sektorji WHERE ime = %s;", (sektor_ime,))
         sektor = self.cur.fetchone()
-        if sektor:
-            sektor_id = sektor[0]  # ID sektorja
-        else:
-            print("Sektor ne obstaja")
-
-
+        sektor_id = sektor[0]  # ID sektorja
+        
         # Zdaj lahko dodamo bolder s pridobljenim sektor_id in parkirisce_id
         self.cur.execute("""
             INSERT INTO bolderji (ime, lat, lng, opis, sektor_id, datum_dodajanja)
@@ -222,7 +223,6 @@ class Repo:
 
 
     def dodaj_smer(self, ime, tezavnost, opis, bolder_id):
-# Preverimo, ali sektor že obstaja, če ne, ga dodamo
         self.cur.execute("""
             INSERT into smeri(ime, tezavnost, opis, bolder_id)
             VALUES (%s, %s, %s, %s)
@@ -248,5 +248,21 @@ class Repo:
             DELETE from parkirisca
             WHERE id = %s
         """, (id,))
+        self.conn.commit()
+    
+    def povezi_bolder_in_parkirisce(self, bolder_id: int, park_id: int):
+        self.cur.execute("""
+            INSERT INTO bolder_parkirisce (bolder_id, parkirisce_id)
+            VALUES (%s, %s)
+            ON CONFLICT DO NOTHING;
+        """, (bolder_id, park_id))
+        self.conn.commit()
+    
+    def povezi_sektor_in_parkirisce(self, sektor_id, parkirisce_id):
+        self.cur.execute("""
+            INSERT INTO sektor_parkirisce (sektor_id, parkirisce_id)
+            VALUES (%s, %s)
+            ON CONFLICT DO NOTHING;
+        """, (sektor_id, parkirisce_id))
         self.conn.commit()
 

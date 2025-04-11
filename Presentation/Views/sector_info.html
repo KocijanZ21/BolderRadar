@@ -65,7 +65,20 @@
     </tbody>
 </table>
 
-<form action="/dodaj_parkirisce" method="get">
-    <input type="hidden" name="sektor_id" value="${sektor.id}">
-    <button class="small-button" type="submit">➕ Dodaj parkirišče</button>
-</form>
+<button class="small-button" type="button" onclick="document.getElementById('park-form').style.display='block';">
+    ➕ Dodaj parkirišče
+</button>
+
+<div id="park-form" style="display: none;">
+    <h3>Dodaj novo parkirišče</h3>
+    <form action="/dodaj_parkirisce_s" method="post">
+        <label>Ime: <input type="text" name="ime" required></label><br>
+        <label>Koordinate: 
+            <input type="number" id="lat" name="lat" step="any" placeholder="Zemljepisna širina" required>
+            <input type="number" id="lng" name="lng" step="any" placeholder="Zemljepisna dolžina" required><br>
+            <br>
+        <label>Opis: <textarea name="opis"></textarea></label><br>
+        <input type="hidden" name="sektor_id" value="{{sektor.id}}">
+        <button type="submit">Shrani</button>
+    </form>
+</div>

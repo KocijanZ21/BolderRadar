@@ -45,7 +45,6 @@ class BolderjiService:
     
     def dobi_bolder_id(self, id:int) -> List[Bolderji]:
         bolder = self.repo.dobi_bolder_id(id)
-        print('service bolder', bolder)
         return bolder
     
     def dobi_smer(self, ime:str) -> List[Smeri]:
@@ -58,7 +57,7 @@ class BolderjiService:
 
     def dodaj_bolder(self, b_ime, b_lat, b_lng, b_opis, b_sektor):
         datum_dod= datetime.today()
-        self.repo.dodaj_bolder(b_ime, b_lat, b_lng, b_opis, b_sektor, datum_dod) # a dela? Če ne v to vrstico naštej vsakega posebej
+        self.repo.dodaj_bolder(b_ime, b_lat, b_lng, b_opis, b_sektor, datum_dod)
     
     def dodaj_sektor(self, s_ime, s_pokrajina, s_lat, s_lng, s_opis):
             s = Sektorji(
@@ -78,6 +77,18 @@ class BolderjiService:
 
     def odstrani_smer(self, id):
         self.repo.odstrani_smer
+
+    def povezi_bolder_in_parkirisce(self, bolder_id, park_id):
+        self.repo.povezi_bolder_in_parkirisce(bolder_id, park_id)
+    
+    def povezi_sektor_in_parkirisce(self, sektor_id, parkirisce_id):
+        self.repo.povezi_sektor_in_parkirisce(sektor_id, parkirisce_id)
+    
+    def dodaj_parkirisce(self, ime, lat, lng, opis):
+        print('pride do service')
+        p = Parkirisca(ime=ime, lat=lat, lng=lng, opis=opis)
+        id_park = self.repo.dodaj_parkirisce(p)
+        return id_park
 
 
 

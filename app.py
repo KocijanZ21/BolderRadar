@@ -131,13 +131,8 @@ def dodaj_bolder_post():
         return template('submit_boulder_form.html', uporabnik=request.get_cookie("uporabnik"), sektor_msg="Ta sektor še ne obstaja.", request=request)
 
     service.dodaj_bolder(ime, lat, lng, opis, sektor)
-    print("Bolder dodan!")
     redirect(url('index'))
 
-@post('/dodaj_parkirisce')                          # Not there yet
-def dodaj_parkirisce():
-    print("Parkirišče dodano!")
-    return "Uspešno dodano!"
 
 @post('/dodaj_sektor')
 def dodaj_sektor():
@@ -155,7 +150,6 @@ def dodaj_smer():
     tezavnost = request.forms.get('tezavnost')
     opis = request.forms.get('opis')
     bolder_id = request.forms.get('bolder_id')
-    print('b id', bolder_id)
     service.dodaj_smer(ime, tezavnost, opis, bolder_id)
     
     # 🔁 Preusmeri nazaj na bolder_info s tem id-jem
@@ -174,14 +168,13 @@ def sektor_info():
 def bolder_info():
     uporabnik = request.get_cookie("uporabnik")
     bolder_id = request.query.id
-    print('app id', bolder_id)
     bolder = service.dobi_bolder_id(bolder_id)
-    print('app', bolder)
     smeri=service.dobi_smeri_bolder(bolder.ime)
-    print('smeri', smeri)
     sektor=service.dobi_sektor_id(bolder.sektor_id)
     parkirisca=service.dobi_parkirisca_bolder(bolder.ime)
-    return template('boulder_info.html', uporabnik=uporabnik, request=request, bolder=bolder, sektor=sektor, smeri=smeri, parkirisca=parkirisca)
+    parkirisca_sektorja = service.dobi_parkirisca_sektor(sektor.ime)
+
+    return template('boulder_info.html', uporabnik=uporabnik, request=request, bolder=bolder, sektor=sektor, smeri=smeri, parkirisca=parkirisca, parkirisca_sektorja=parkirisca_sektorja)
 
 @get('/parkirisce_info')   # very much not okej, ampak maš na nečem za delat
 def parkirisce_info():
@@ -191,7 +184,60 @@ def parkirisce_info():
     #sektor=service.dobi_sektor_ime(parkirisce.sektor)
     return template('parkirisce_info.html', uporabnik=uporabnik, request=request, parkirisce=parkirisce)
 
+@post('/dodaj_povezavo_b_parkirisce')
+def dodaj_povezavo_b_parkirisce():
+    bolder_id = request.forms.get('bolder_id')
+    park_id = request.forms.get('park_id')
 
+    # Doda povezavo med bolderjem in parkiriščem
+    service.povezi_bolder_in_parkirisce(bolder_id, park_id)
+
+    # Preusmeri nazaj na boulder_info z ustreznim ID-jem
+    redirect(f"/bolder_info?id={bolder_id}")
+
+@post('/dodaj_parkirisce_s')             ### zakaj pri bolderjih dela tle ma pa problem??
+def dodaj_parkirisce_s():
+    ime = request.forms.get('ime')
+    lat = request.forms.get('lat')
+    lng = request.forms.get('lng')
+    opis = request.forms.get('opis')
+
+    # Bolder ID iz hidden inputa
+    sektor_id = request.forms.get('sektor_id')
+
+    # 1. Dodamo parkirišče v tabelo parkirisca
+    parkirisce_id = service.dodaj_parkirisce(ime, lat, lng, opis)
+    # 2. Dodamo povezavo parkirišče <-> sektor
+    service.povezi_sektor_in_parkirisce(sektor_id, parkirisce_id)
+    # Preusmeri nazaj na boulder_info z ustreznim ID-jem
+    redirect(f"/sektor_info?id={sektor_id}")
+    
+
+@post('/dodaj_parkirisce_b')
+def dodaj_parkirisce_b():
+    ime = request.forms.get('ime')
+    lat = request.forms.get('lat')
+    lng = request.forms.get('lng')
+    opis = request.forms.get('opis')
+
+    # Bolder ID iz hidden inputa
+    bolder_id = request.forms.get('bolder_id')
+
+    # Dobimo bolder in njegov sektor
+    bolder = service.dobi_bolder_id(bolder_id)
+    sektor_id = bolder.sektor_id
+
+    # 1. Dodamo parkirišče v tabelo parkirisca
+    parkirisce_id = service.dodaj_parkirisce(ime, lat, lng, opis)
+
+    # 2. Dodamo povezavo parkirišče <-> bolder
+    service.povezi_bolder_in_parkirisce(bolder_id, parkirisce_id)
+
+    # 3. Dodamo povezavo parkirišče <-> sektor
+    service.povezi_sektor_in_parkirisce(sektor_id, parkirisce_id)
+
+    # Preusmeri nazaj na boulder_info z ustreznim ID-jem
+    redirect(f"/bolder_info?id={bolder_id}")
 
 
 if __name__ == "__main__":

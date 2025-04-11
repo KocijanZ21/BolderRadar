@@ -10,7 +10,7 @@
 {{bolder.opis}}
 <hr>
 
-<h2>Smeri</h2>
+<h3>Smeri</h3>
 <table class="routes-table">
     <thead>
         <tr>
@@ -31,10 +31,12 @@
     </tbody>
 </table>
 
-<button class="small-button" onclick="document.getElementById('smer-form').style.display='block';">➕ Dodaj smer</button>
+<button class="small-button" onclick="document.getElementById('smer-form').style.display='block';">
+    ➕ Dodaj smer
+</button>
 
 <div id="smer-form" style="display: none;">
-    <h3>Dodaj novo smer</h3>
+    <h4>Dodaj novo smer</h4>
     <form action="/dodaj_smer" method="post">
         <label>Ime: <input type="text" name="ime" required></label><br>
         <label>Težavnost: <input type="text" name="tezavnost" required></label><br>
@@ -48,7 +50,7 @@
 
 <hr>
 
-<h2>Parkirišča povezana z bolderjem</h2>
+<h3>Parkirišča povezana z bolderjem</h3>
 <table class="routes-table">
     <thead>
         <tr>
@@ -62,7 +64,7 @@
     % for park in parkirisca:
         <tr>
             <td>
-                <a href="/park_info?id={{bolder.id}}">{{park.ime}}</a>
+                <a href="/park_info?id={{park.id}}">{{park.ime}}</a>
             </td>
             <td>{{park.lat}}, {{park.lng}}</td>
             <td>{{park.opis}}</td>
@@ -72,6 +74,32 @@
     </tbody>
 </table>
 
-<form action="/dodaj_parkirisce" method="get">
-    <button class="small-button" type="submit">➕ Dodaj parkirišče</button>
-</form>
+<button class="small-button" type="button" onclick="document.getElementById('park-form').style.display='block';">
+    ➕ Dodaj parkirišče
+</button>
+<div id="park-form" style="display: none;">
+    <h4>Poveži obstoječe parkirišče</h4>
+    <form action="/dodaj_povezavo_b_parkirisce" method="post">
+        <label>Izberi parkirišče:
+            <select name="park_id">
+                % for park in parkirisca_sektorja:
+                    <option value="{{park.id}}">{{park.ime}} ({{park.lat}}, {{park.lng}})</option>
+                % end
+            </select>
+        </label><br>
+        <input type="hidden" name="bolder_id" value="{{bolder.id}}">
+        <button type="submit">Dodaj</button>
+    </form>
+
+    <h4>Dodaj novo parkirišče</h4>
+    <form action="/dodaj_parkirisce_b" method="post">
+        <label>Ime: <input type="text" name="ime" required></label><br>
+        <label>Koordinate: 
+            <input type="number" id="lat" name="lat" step="any" placeholder="Zemljepisna širina" required>
+            <input type="number" id="lng" name="lng" step="any" placeholder="Zemljepisna dolžina" required><br>
+            <br>
+        <label>Opis: <textarea name="opis"></textarea></label><br>
+        <input type="hidden" name="bolder_id" value="{{bolder.id}}">
+        <button type="submit">Shrani</button>
+    </form>
+</div>
