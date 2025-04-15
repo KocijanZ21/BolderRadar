@@ -1,6 +1,6 @@
 # BolderRadar
 
-Zagon projekta: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/KocijanZ21/BolderRadar/main?urlpath=%2Fdoc%2Ftree%2Fproxy%2F8080)
+Zagon projekta: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/KocijanZ21/BolderRadar/main?urlpath=proxy%2F8080)
 
 Za športno plezanje z vrvjo po naravni skali obstaja mnogo dobro zbranih vodničkov. Za plezanje po bolderjih ali balvanih pa (vsaj v Sloveniji) ni zbranih in urejenih plezališč na enem mestu. Zato ta aplikacija Bolder Radar.
 
