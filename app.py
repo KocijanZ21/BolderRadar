@@ -31,6 +31,18 @@ def cookie_required(f):
 def static(filename):
     return static_file(filename, root='Presentation/static')
 
+def uporabnik_klic():
+    """
+    Funkcija, ki pridobi uporabniško ime iz piškotkov.
+    """
+    raw = request.get_cookie("uporabnik")
+    uporabnik = None
+    if raw:
+        try:
+            uporabnik = raw.encode('latin1').decode('utf-8')
+        except UnicodeEncodeError:
+            uporabnik = raw
+    return uporabnik
 
 @get('/')
 def index():
@@ -44,15 +56,15 @@ def index():
     sektorji_json = json.dumps(sektorji)  # Seriliziraj seznam sektorjev v JSON
 
     email = request.get_cookie('email')
-    uporabnik = request.get_cookie("uporabnik")  # Pridobi uporabniško ime iz piškotkov
+    uporabnik = uporabnik_klic()
 
-    return template('index', uporabnik=uporabnik.encode('latin1').decode('utf-8'), email=email, request=request, sektorji=sektorji_json)
+    return template('index', uporabnik=uporabnik, email=email, request=request, sektorji=sektorji_json)
 
 
 @get('/aboutus')
 def about_us():
-    uporabnik = request.get_cookie("uporabnik")
-    return template('about_us.html', request=request, uporabnik=uporabnik.encode('latin1').decode('utf-8'))
+    uporabnik = uporabnik_klic()
+    return template('about_us.html', request=request, uporabnik=uporabnik)
 
 
 @get('/prijava')
@@ -73,7 +85,9 @@ def prijava():
         response.set_cookie("email", email, path="/")   
         response.set_cookie("uporabnik", prijava.ime, path="/")
         uporabnik=prijava.ime
-        redirect(url('index', uporabnik=uporabnik.encode('latin1').decode('utf-8')))
+        print('prijava', prijava)
+        print('uporabnik', uporabnik)
+        redirect(url('index', uporabnik=uporabnik))
 
     else:
         return template("login.html", uporabnik=None, napaka="Neuspešna prijava. Napačno geslo ali email naslov.")
@@ -112,8 +126,8 @@ def registracija_post():
 
 @get('/dodaj_bolder')
 def dodaj_bolder_get():
-    uporabnik = request.get_cookie("uporabnik")
-    return template('submit_boulder_form.html', uporabnik=uporabnik.encode('latin1').decode('utf-8'), request=request, sektor_msg=None)
+    uporabnik = uporabnik_klic()
+    return template('submit_boulder_form.html', uporabnik=uporabnik, request=request, sektor_msg=None)
 
 @post('/dodaj_bolder') 
 def dodaj_bolder_post():
@@ -128,7 +142,8 @@ def dodaj_bolder_post():
     print('sektor', sektor)
 
     if service.dobi_sektor_ime(sektor) is None:
-        return template('submit_boulder_form.html', uporabnik=request.get_cookie("uporabnik").encode('latin1').decode('utf-8'), sektor_msg="Ta sektor še ne obstaja.", request=request)
+        uporabnik = uporabnik_klic()
+        return template('submit_boulder_form.html', uporabnik=uporabnik, sektor_msg="Ta sektor še ne obstaja.", request=request)
     s_id = service.dobi_sektor_ime(sektor).id
     service.dodaj_bolder(ime, lat, lng, opis, sektor)
     redirect(url('sektor_info', id=s_id))
@@ -142,7 +157,8 @@ def dodaj_sektor():
     lng = request.forms.getunicode('s_lng')
     opis = request.forms.getunicode('s_opis')
     service.dodaj_sektor(ime, pokrajina, lat, lng, opis)
-    return template('submit_boulder_form.html', uporabnik=request.get_cookie("uporabnik").encode('latin1').decode('utf-8'), sektor_msg="Sektor uspešno dodan!", request=request)
+    uporabnik = uporabnik_klic()
+    return template('submit_boulder_form.html', uporabnik=uporabnik, sektor_msg="Sektor uspešno dodan!", request=request)
 
 @post('/dodaj_smer')
 def dodaj_smer():
@@ -157,16 +173,16 @@ def dodaj_smer():
 
 @get('/sektor_info')
 def sektor_info():
-    uporabnik = request.get_cookie("uporabnik")
+    uporabnik = uporabnik_klic()
     sektor_id = request.query.id
     sektor = service.dobi_sektor_id(sektor_id)
     bolderji=service.dobi_bolderje_sektor(sektor.ime)
     parkirisca=service.dobi_parkirisca_sektor(sektor.ime)
-    return template('sector_info.html', uporabnik=uporabnik.encode('latin1').decode('utf-8'), request=request, sektor=sektor, bolderji=bolderji, parkirisca=parkirisca)
+    return template('sector_info.html', uporabnik=uporabnik, request=request, sektor=sektor, bolderji=bolderji, parkirisca=parkirisca)
 
 @get('/bolder_info')
 def bolder_info():
-    uporabnik = request.get_cookie("uporabnik")
+    uporabnik = uporabnik_klic()
     bolder_id = request.query.id
     bolder = service.dobi_bolder_id(bolder_id)
     smeri=service.dobi_smeri_bolder(bolder.ime)
@@ -177,11 +193,11 @@ def bolder_info():
     parkirisca_id = [p.id for p in parkirisca]
     filtrirana_p = [p for p in parkirisca_sektorja if p.id not in parkirisca_id]
 
-    return template('boulder_info.html', uporabnik=uporabnik.encode('latin1').decode('utf-8'), request=request, bolder=bolder, sektor=sektor, smeri=smeri, parkirisca=parkirisca, parkirisca_sektorja=filtrirana_p)
+    return template('boulder_info.html', uporabnik=uporabnik, request=request, bolder=bolder, sektor=sektor, smeri=smeri, parkirisca=parkirisca, parkirisca_sektorja=filtrirana_p)
 
 @get('/park_info')   # very much not okej, ampak maš na nečem za delat
 def parkirisce_info():
-    uporabnik = request.get_cookie("uporabnik")
+    uporabnik = uporabnik_klic()
     parkirisce_id = request.query.id
     parkirisce = service.dobi_parkirisce(parkirisce_id)
     sektorji=service.dobi_sektorje_park(parkirisce_id)
@@ -199,7 +215,7 @@ def parkirisce_info():
     bolderji_id = [b.id for b in bolderji]
     filtrirani_b = [b for b in bolderji_gledena_s if b.id not in bolderji_id]
     
-    return template('park_info.html', uporabnik=uporabnik.encode('latin1').decode('utf-8'), request=request, parkirisce=parkirisce, sektorji=sektorji, bolderji=bolderji, vsi_sektorji=filtrirani_s, bolderji_gledena_s=filtrirani_b)
+    return template('park_info.html', uporabnik=uporabnik, request=request, parkirisce=parkirisce, sektorji=sektorji, bolderji=bolderji, vsi_sektorji=filtrirani_s, bolderji_gledena_s=filtrirani_b)
 
 @post('/dodaj_povezavo_b_parkirisce')
 def dodaj_povezavo_b_parkirisce():
@@ -269,7 +285,7 @@ def dodaj_povezavo_s_parkirisce():
 
 @get('/pokrajine')
 def pokrajine():
-    uporabnik = request.get_cookie("uporabnik")
+    uporabnik = uporabnik_klic()
     pokrajine = ['Gorenjska', 'Štajerska', 'Prekmurje', 'Koroška', 'Notranjska', 'Primorska', 'Dolenjska']
     izbrana_p = request.query.pokrajina
 
@@ -277,7 +293,7 @@ def pokrajine():
         sektorji = service.dobi_sektorje_pokrajina(izbrana_p)
     else:
         sektorji = service.dobi_sektorje()
-    return template('pokrajine.html', uporabnik=uporabnik.encode('latin1').decode('utf-8'), request=request, sektorji=sektorji, pokrajine=pokrajine, izbrana_p=izbrana_p)
+    return template('pokrajine.html', uporabnik=uporabnik, request=request, sektorji=sektorji, pokrajine=pokrajine, izbrana_p=izbrana_p)
 
 @post('/odstrani_bolder')
 def odstrani_bolder():
