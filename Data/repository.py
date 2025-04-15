@@ -18,22 +18,6 @@ class Repo:
         self.conn = psycopg2.connect(database=auth.db, host=auth.host, user=auth.user, password=auth.password, port=DB_PORT)
         self.cur = self.conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-    def dobi_uporabnike(self) -> List[Uporabniki]:
-        self.cur.execute("""
-            SELECT * FROM Uporabniki
-            Order by datum_reg desc
-        """)
-        uporabniki = [Uporabniki.from_dict(u) for u in self.cur.fetchall()]
-        return uporabniki
-
-    def dobi_bolderje(self) -> List[Bolderji]:
-        self.cur.execute("""
-            SELECT * FROM Bolderji
-            Order by id         
-        """)
-        bolderji = [Bolderji.from_dict(b) for b in self.cur.fetchall()]
-        return bolderji
-    
     def dobi_bolderje_sektor(self, sektor:str) -> List[Bolderji]:
         self.cur.execute("""
             SELECT b.* FROM bolderji b
@@ -60,14 +44,6 @@ class Repo:
         p_sektorji = [Sektorji.from_dict(s) for s in self.cur.fetchall()]
         return p_sektorji
 
-    def dobi_parkirisca(self) -> List[Parkirisca]:
-        self.cur.execute("""
-            SELECT * FROM Parkirisca
-            Order by id         
-        """)
-        parkirisca = [Parkirisca.from_dict(p) for p in self.cur.fetchall()]
-        return parkirisca
-    
     def dobi_parkirisca_sektor(self, sektor:str) -> List[Parkirisca]:
         self.cur.execute("""
             SELECT p.* FROM parkirisca p
@@ -87,14 +63,6 @@ class Repo:
              """, (bolder,))
         b_parkirisca = [Parkirisca.from_dict(p) for p in self.cur.fetchall()]
         return b_parkirisca
-    
-    def dobi_smeri(self) -> List[Smeri]:
-        self.cur.execute("""
-            SELECT * FROM Smeri
-            Order by id         
-        """)
-        smeri = [Smeri.from_dict(s) for s in self.cur.fetchall()]
-        return smeri
     
     def dobi_smeri_bolder(self, bolder:str) -> List[Smeri]:
         self.cur.execute("""
@@ -116,15 +84,6 @@ class Repo:
         b = Uporabniki.from_dict(self.cur.fetchone())
         return b
 
-    def dobi_bolder_ime(self, ime:str) -> Bolderji:
-        self.cur.execute("""
-            SELECT id, ime, lat, lng, opis, sektor, parkirisce, datum_dod
-            FROM bolderji
-            WHERE ime = %s
-             """, (ime,))
-        b = Bolderji.from_dict(self.cur.fetchone())
-        return b
-    
     def dobi_bolder_id(self, id:int) -> Bolderji:
         self.cur.execute("""
             SELECT id, ime, lat, lng, opis, sektor_id, datum_dodajanja
@@ -136,7 +95,7 @@ class Repo:
         
     def dobi_sektor_ime(self, ime:str) -> Sektorji:
         self.cur.execute("""
-            SELECT id, ime, lat, lng, opis
+            SELECT id, ime, pokrajina, lat, lng, opis
             FROM sektorji
             WHERE ime = %s
              """, (ime,))
@@ -149,7 +108,7 @@ class Repo:
     
     def dobi_sektor_id(self, id:int) -> Sektorji:
         self.cur.execute("""
-            SELECT id, ime, lat, lng, opis
+            SELECT id, ime, pokrajina, lat, lng, opis
             FROM sektorji
             WHERE id = %s
              """, (id,))
@@ -168,15 +127,6 @@ class Repo:
         p = Parkirisca.from_dict(self.cur.fetchone())
         return p
     
-    def dobi_smer(self, ime:str) -> Smeri:
-        self.cur.execute("""
-            SELECT id, ime, tezavnost, opis, bolder
-            FROM Smeri
-            WHERE ime = %s
-             """, (ime,))
-        s = Smeri.from_dict(self.cur.fetchone())
-        return s
-    
     def dodaj_uporabnika(self, uporabnik: Uporabniki):
         self.cur.execute("""
             INSERT into uporabniki(ime, email, geslo, datum_registracije)
@@ -193,15 +143,12 @@ class Repo:
         self.conn.commit()
     
     def dodaj_parkirisce(self, parkirisce: Parkirisca):
-        print('pride do repo')
         self.cur.execute("""
             INSERT into parkirisca(ime, lat, lng, opis)
             VALUES (%s, %s, %s, %s)
             RETURNING id;
             """, (parkirisce.ime, parkirisce.lat, parkirisce.lng, parkirisce.opis))
-        print('pride iz repo')
         parkirisce_id = self.cur.fetchone()[0]
-        print('repo park id', parkirisce_id)
         self.conn.commit()
         return parkirisce_id  # Vrnemo ID parkirišča, ki smo ga dodali
     
@@ -217,7 +164,7 @@ class Repo:
             INSERT INTO bolderji (ime, lat, lng, opis, sektor_id, datum_dodajanja)
             VALUES (%s, %s, %s, %s, %s, %s)
             RETURNING id;
-        """, (ime, lat, lng, opis, sektor_id, datum_dod))
+            """, (ime, lat, lng, opis, sektor_id, datum_dod))
 
         self.conn.commit()
 
@@ -231,23 +178,39 @@ class Repo:
 
     def odstrani_bolder(self, id):
         self.cur.execute("""
+            DELETE from smeri
+            WHERE bolder_id = %s
+            """, (id,))
+        self.cur.execute("""
+            DELETE from bolder_parkirisce
+            WHERE bolder_id = %s
+            """, (id,))
+        self.cur.execute("""
             DELETE from bolderji
             WHERE id = %s
-        """, (id,))
+            """, (id,))
         self.conn.commit()
     
     def odstrani_smer(self, id):
         self.cur.execute("""
             DELETE from smeri
             WHERE id = %s
-        """, (id,))
+            """, (id,))
         self.conn.commit()
     
     def odstrani_parkirisce(self, id):
         self.cur.execute("""
+            DELETE from bolder_parkirisce
+            WHERE parkirisce_id = %s
+            """, (id,))
+        self.cur.execute("""
+            DELETE from sektor_parkirisce
+            WHERE parkirisce_id = %s
+            """, (id,))
+        self.cur.execute("""
             DELETE from parkirisca
             WHERE id = %s
-        """, (id,))
+            """, (id,))
         self.conn.commit()
     
     def povezi_bolder_in_parkirisce(self, bolder_id: int, park_id: int):
@@ -255,7 +218,7 @@ class Repo:
             INSERT INTO bolder_parkirisce (bolder_id, parkirisce_id)
             VALUES (%s, %s)
             ON CONFLICT DO NOTHING;
-        """, (bolder_id, park_id))
+            """, (bolder_id, park_id))
         self.conn.commit()
     
     def povezi_sektor_in_parkirisce(self, sektor_id, parkirisce_id):
@@ -263,6 +226,68 @@ class Repo:
             INSERT INTO sektor_parkirisce (sektor_id, parkirisce_id)
             VALUES (%s, %s)
             ON CONFLICT DO NOTHING;
-        """, (sektor_id, parkirisce_id))
+            """, (sektor_id, parkirisce_id))
+        self.conn.commit()
+    
+    def dobi_sektorje_park(self, parkirisce_id):
+        self.cur.execute("""
+            SELECT s.* FROM sektorji s
+            JOIN sektor_parkirisce sp ON s.id = sp.sektor_id
+            WHERE sp.parkirisce_id = %s;
+             """, (parkirisce_id,))
+        sektorji = [Sektorji.from_dict(s) for s in self.cur.fetchall()]
+        return sektorji
+    
+    def dobi_bolderje_park(self, parkirisce_id):
+        self.cur.execute("""
+            SELECT b.* FROM bolderji b
+            JOIN bolder_parkirisce bp ON b.id = bp.bolder_id
+            WHERE bp.parkirisce_id = %s;
+             """, (parkirisce_id,))
+        bolderji = [Bolderji.from_dict(b) for b in self.cur.fetchall()]
+        return bolderji
+    
+    def odstrani_sektor(self, id):
+        # 1. Najdi vse bolder_id-je iz tega sektorja
+        self.cur.execute("""
+            SELECT id FROM bolderji
+            WHERE sektor_id = %s
+            """, (id,))
+        bolder_ids = [row[0] for row in self.cur.fetchall()]
+        # 2. Izbriši iz bolder_parkirisce vse povezave z njimi
+        if bolder_ids:  # samo če jih je
+            self.cur.execute("""
+                DELETE FROM bolder_parkirisce
+                WHERE bolder_id = ANY(%s)
+                """, (bolder_ids,))
+        # 3. Izbriši vse bolderje iz sektorja
+        self.cur.execute("""
+            DELETE FROM bolderji
+            WHERE sektor_id = %s
+            """, (id,))
+        # 4. Izbriši vse povezave sektor-parkirišče
+        self.cur.execute("""
+            DELETE FROM sektor_parkirisce
+            WHERE sektor_id = %s
+            """, (id,))
+        # 5. Izbriši sam sektor
+        self.cur.execute("""
+            DELETE from sektorji
+            WHERE id = %s
+            """, (id,))
+        self.conn.commit()
+    
+    def odstrani_povezavo_b_p(self, bolder_id, park_id):
+        self.cur.execute("""
+            DELETE from bolder_parkirisce
+            WHERE bolder_id = %s AND parkirisce_id = %s
+            """, (bolder_id, park_id))
+        self.conn.commit()
+    
+    def odstrani_povezavo_s_p(self, sektor_id, park_id):
+        self.cur.execute("""
+            DELETE from sektor_parkirisce
+            WHERE sektor_id = %s AND parkirisce_id = %s
+            """, (sektor_id, park_id))
         self.conn.commit()
 

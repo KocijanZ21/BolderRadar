@@ -1,0 +1,120 @@
+% rebase('layout_template.html', naslov='Parkirišče info')
+
+<div  style="margin-top: 10px;">
+    <div style="border: 3px solid black; background-color: #FBBC04; margin-bottom: 10px; text-align: center">
+        <h2> {{parkirisce.ime}}</h2>
+        <label id="coordinates"> ({{parkirisce.lat}}, {{parkirisce.lng}}) </label>
+        <label id="icon" style="font-size: small; font-style: italic;"></label>
+        
+    </div>
+{{parkirisce.opis}}
+<form action="/odstrani_parkirisce" method="post" onsubmit="return confirm('Si prepričan/a, da želiš izbrisati to parkirišče?');" style="margin-top: 10px;">
+    <input type="hidden" name="park_id" value="{{parkirisce.id}}">
+    <button type="submit" class="small-button">🗑️ Izbriši to parkirišče</button>
+</form>
+<hr>
+
+<h2>Dostopni sektorji</h2>
+<table class="routes-table">
+    <thead>
+        <tr>
+            <th>Ime</th>
+            <th>Koordinate</th>
+            <th>Opis</th>
+            <th></th>
+            
+        </tr>
+    </thead>
+    <tbody>
+    % for sektor in sektorji:
+        <tr>
+            <td>
+                <a href="/sektor_info?id={{sektor.id}}">{{sektor.ime}}</a>
+            </td>
+            <td>{{sektor.lat}}, {{sektor.lng}}</td>
+            <td>{{sektor.opis}}</td>
+            <td>
+                <form action="/odstrani_povezavo_p_s" method="post" onsubmit="return confirm('Si prepričan/a, da želiš odstraniti ta sektor?');">
+                    <input type="hidden" name="sektor_id" value="{{sektor.id}}">
+                    <input type="hidden" name="parkirisce_id" value="{{parkirisce.id}}">
+                    <button type="submit" class="small-button danger-button" title="Odstrani sektor">🗑️</button>
+                </form>
+            </td>
+            
+        </tr>
+    % end
+    </tbody>
+</table>
+
+<button class="small-button" type="button" onclick="document.getElementById('park-form').style.display='block';">
+    ➕ Dodaj sektor
+</button>
+
+<div id="park-form" style="display: none;">
+    <h4>Poveži obstoječi sektor</h4>
+<form action="/dodaj_povezavo_s_parkirisce" method="post">
+    <label>Izberi sektor:
+        <select name="sektor_id" required>
+            % for sektor in vsi_sektorji:
+                <option value="{{sektor.id}}">{{sektor.ime}} ({{sektor.lat}}, {{sektor.lng}})</option>
+            % end
+        </select>
+    </label>
+    <input type="hidden" name="parkirisce_id" value="{{parkirisce.id}}">
+    <button type="submit">Poveži</button>
+</form>
+</div>
+
+<hr>
+
+<h2>Bolderji </h2>
+<table class="routes-table">
+    <thead>
+        <tr>
+            <th>Ime</th>
+            <th>Koordinate</th>
+            <th>Opis</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    % for bolder in bolderji:
+        <tr>
+            <td>
+                <a href="/bolder_info?id={{bolder.id}}">{{bolder.ime}}</a>
+            </td>
+            <td>{{bolder.lat}}, {{bolder.lng}}</td>
+            <td>{{bolder.opis}}</td>
+            <td>
+                <form action="/odstrani_povezavo_p_b" method="post" onsubmit="return confirm('Si prepričan/a, da želiš odstraniti ta bolder?');">
+                    <input type="hidden" name="bolder_id" value="{{bolder.id}}">
+                    <input type="hidden" name="park_id" value="{{parkirisce.id}}">
+                    <button type="submit" class="small-button danger-button" title="Odstrani bolder">🗑️</button>
+                </form>
+            </td>
+        </tr>
+    % end
+    </tbody>
+</table>
+
+<button class="small-button" type="button" onclick="document.getElementById('bolder-form').style.display='block';">
+    ➕ Dodaj bolder
+</button>
+<div id="bolder-form" style="display: none;">
+    <h4>Poveži obstoječi bolder</h4>
+    <form action="/dodaj_povezavo_b_parkirisce" method="post">
+        <label>Izberi bolder:
+            <select name="bolder_id" required>
+                % for bolder in bolderji_gledena_s:
+                    <option value="{{bolder.id}}">{{bolder.ime}} ({{bolder.lat}}, {{bolder.lng}})</option>
+                % end
+            </select>
+        </label>
+        <input type="hidden" name="park_id" value="{{parkirisce.id}}">
+        <button type="submit">Poveži</button>
+    </form>
+</div>
+
+
+
+

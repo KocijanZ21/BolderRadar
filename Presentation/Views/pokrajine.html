@@ -1,0 +1,37 @@
+% rebase('layout_template.html', naslov='Pokrajine')
+
+<form action="/pokrajine" method="get">
+    <label for="pokrajina">Filtriraj po pokrajini:</label>
+    <select name="pokrajina" onchange="this.form.submit()">
+        <option value="vse" {{'selected' if izbrana_p == 'vse' or not izbrana_p else ''}}>Vse</option>
+        % for pok in pokrajine:
+            <option value="{{pok}}" {{'selected' if izbrana_p == pok else ''}}>{{pok}}</option>
+        % end
+    </select>
+</form>
+
+
+<table class="routes-table">
+    <thead>
+        <tr>
+            <th>Ime</th>
+            <th>Pokrajina</th>
+            <th>Koordinate</th>
+            <th>Opis</th>
+            
+        </tr>
+    </thead>
+    <tbody>
+    % for sektor in sektorji:
+        <tr>
+            <td>
+                <a href="/sektor_info?id={{sektor.id}}">{{sektor.ime}}</a>
+            </td>
+            <td>{{sektor.pokrajina}}</td>
+            <td>{{sektor.lat}}, {{sektor.lng}}</td>
+            <td>{{sektor.opis}}</td>
+            
+        </tr>
+    % end
+    </tbody>
+</table>

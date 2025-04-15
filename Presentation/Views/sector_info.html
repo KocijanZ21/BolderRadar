@@ -3,12 +3,16 @@
 <div  style="margin-top: 10px;">
     <div style="border: 3px solid black; background-color: #FBBC04; margin-bottom: 10px; text-align: center">
         <h2> {{sektor.ime}}</h2>
-        <label>sektor.pokrajina</label><br>
+        <label id ="pokrajina">{{sektor.pokrajina}}</label><br>
         <label id="coordinates"> ({{sektor.lat}}, {{sektor.lng}}) </label>
         <label id="icon" style="font-size: small; font-style: italic;"></label>
         
     </div>
 {{sektor.opis}}
+<form action="/odstrani_sektor" method="post" onsubmit="return confirm('Si prepričan/a, da želiš izbrisati ta sektor?');" style="margin-top: 10px;">
+    <input type="hidden" name="sektor_id" value="{{sektor.id}}">
+    <button type="submit" class="small-button">🗑️ Izbriši ta sektor</button>
+</form>
 <hr>
 
 <h2>Bolderji </h2>
@@ -48,6 +52,7 @@
             <th>Ime</th>
             <th>Koordinate</th>
             <th>Opis</th>
+            <th></th>
             
         </tr>
     </thead>
@@ -55,10 +60,17 @@
     % for park in parkirisca:
         <tr>
             <td>
-                <a href="/park_info?id=${park.id}">{{park.ime}}</a>
+                <a href="/park_info?id={{park.id}}">{{park.ime}}</a>
             </td>
             <td>{{park.lat}}, {{park.lng}}</td>
             <td>{{park.opis}}</td>
+            <td>
+                <form action="/odstrani_povezavo_s_p" method="post" onsubmit="return confirm('Si prepričan/a, da želiš odstraniti to parkirišče?');">
+                    <input type="hidden" name="park_id" value="{{park.id}}">
+                    <input type="hidden" name="sektor_id" value="{{sektor.id}}">
+                    <button type="submit" class="small-button danger-button" title="Odstrani parkirišče">🗑️</button>
+                </form>
+            </td>
             
         </tr>
     % end

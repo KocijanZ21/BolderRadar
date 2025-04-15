@@ -10,9 +10,6 @@ class BolderjiService:
     def __init__(self) -> None:
         self.repo = Repo()
 
-    def dobi_bolderje(self) -> List[Bolderji]:
-        return self.repo.dobi_bolderje()
-
     def dobi_bolderje_sektor(self, sektor:str) -> List[Bolderji]:
         return self.repo.dobi_bolderje_sektor(sektor)
     
@@ -39,18 +36,10 @@ class BolderjiService:
         sektor = self.repo.dobi_sektor_id(id)
         return sektor
     
-    def dobi_bolder_ime(self, ime:str) -> List[Bolderji]:
-        bolder = self.repo.dobi_bolder_ime(ime)
-        return bolder
-    
     def dobi_bolder_id(self, id:int) -> List[Bolderji]:
         bolder = self.repo.dobi_bolder_id(id)
         return bolder
     
-    def dobi_smer(self, ime:str) -> List[Smeri]:
-        smer = self.repo.dobi_smer(ime)
-        return smer
-
     def dobi_parkirisce(self, id:int) -> List[Parkirisca]:
         park = self.repo.dobi_parkirisce(id)
         return park
@@ -76,7 +65,13 @@ class BolderjiService:
         self.repo.odstrani_bolder(id)
 
     def odstrani_smer(self, id):
-        self.repo.odstrani_smer
+        self.repo.odstrani_smer(id)
+    
+    def odstrani_sektor(self, id):
+        self.repo.odstrani_sektor(id)
+    
+    def odstrani_parkirisce(self, id):
+        self.repo.odstrani_parkirisce(id)
 
     def povezi_bolder_in_parkirisce(self, bolder_id, park_id):
         self.repo.povezi_bolder_in_parkirisce(bolder_id, park_id)
@@ -85,10 +80,21 @@ class BolderjiService:
         self.repo.povezi_sektor_in_parkirisce(sektor_id, parkirisce_id)
     
     def dodaj_parkirisce(self, ime, lat, lng, opis):
-        print('pride do service')
         p = Parkirisca(ime=ime, lat=lat, lng=lng, opis=opis)
         id_park = self.repo.dodaj_parkirisce(p)
         return id_park
+    
+    def dobi_sektorje_park(self, parkirisce_id):
+        return self.repo.dobi_sektorje_park(parkirisce_id)
+    
+    def dobi_bolderje_park(self, parkirisce_id):
+        return self.repo.dobi_bolderje_park(parkirisce_id)
+    
+    def odstrani_povezavo_b_p(self, bolder_id, park_id):
+        self.repo.odstrani_povezavo_b_p(bolder_id, park_id)
+    
+    def odstrani_povezavo_s_p(self, sektor_id, park_id):
+        self.repo.odstrani_povezavo_s_p(sektor_id, park_id)
 
 
 

@@ -8,15 +8,20 @@
         
     </div>
 {{bolder.opis}}
+<form action="/odstrani_bolder" method="post" onsubmit="return confirm('Si prepričan/a, da želiš izbrisati ta bolder?');" style="margin-top: 10px;">
+    <input type="hidden" name="bolder_id" value="{{bolder.id}}">
+    <button type="submit" class="small-button">🗑️ Izbriši ta bolder</button>
+</form>
 <hr>
 
-<h3>Smeri</h3>
+<h3>Smeri {{uporabnik}}</h3>
 <table class="routes-table">
     <thead>
         <tr>
             <th>Ime</th>
             <th>Koordinate</th>
             <th>Opis</th>
+            <th></th>
 
         </tr>
     </thead>
@@ -26,6 +31,13 @@
             <td>{{smer.ime}}</td>
             <td>{{smer.tezavnost}}</td>
             <td>{{smer.opis}}</td>
+            <td>
+                <form action="/odstrani_smer" method="post" onsubmit="return confirm('Si prepričan, da želiš izbrisati to smer?');">
+                    <input type="hidden" name="smer_id" value="{{smer.id}}">
+                    <input type="hidden" name="bolder_id" value="{{bolder.id}}">
+                    <button type="submit" class="small-button danger-button" title="Odstrani smer">🗑️</button>
+                </form>
+            </td>
         </tr>
     % end
     </tbody>
@@ -39,14 +51,42 @@
     <h4>Dodaj novo smer</h4>
     <form action="/dodaj_smer" method="post">
         <label>Ime: <input type="text" name="ime" required></label><br>
-        <label>Težavnost: <input type="text" name="tezavnost" required></label><br>
+        
+        <label for="tezavnost">Težavnost:</label>
+        <select id="tezavnost" name="tezavnost" required>
+            <option value="3">3</option>
+            <option value="4a">4a</option>
+            <option value="4b">4b</option>
+            <option value="4c">4c</option>
+            <option value="5a">5a</option>
+            <option value="5b">5b</option>
+            <option value="5c">5c</option>
+            <option value="6a">6a</option>
+            <option value="6a+">6a+</option>
+            <option value="6b">6b</option>
+            <option value="6b+">6b+</option>
+            <option value="6c">6c</option>
+            <option value="6c+">6c+</option>
+            <option value="7a">7a</option>
+            <option value="7a+">7a+</option>
+            <option value="7b">7b</option>
+            <option value="7b+">7b+</option>
+            <option value="7c">7c</option>
+            <option value="7c+">7c+</option>
+            <option value="8a">8a</option>
+            <option value="8a+">8a+</option>
+            <option value="8b">8b</option>
+            <option value="8b+">8b+</option>
+            <option value="8c">8c</option>
+            <option value="8c+">8c+</option>
+            <option value="9a">9a</option>
+            <option value="9a+">9a+</option>
+        </select><br>
         <label>Opis: <textarea name="opis"></textarea></label><br>
         <input type="hidden" name="bolder_id" value="{{bolder.id}}">
         <button type="submit">Shrani</button>
     </form>
 </div>
-
-
 
 <hr>
 
@@ -57,6 +97,7 @@
             <th>Ime</th>
             <th>Koordinate</th>
             <th>Opis</th>
+            <th></th>
             
         </tr>
     </thead>
@@ -68,6 +109,13 @@
             </td>
             <td>{{park.lat}}, {{park.lng}}</td>
             <td>{{park.opis}}</td>
+            <td>
+                <form action="/odstrani_povezavo_b_p" method="post" onsubmit="return confirm('Si prepričan/a, da želiš odstraniti to parkirišče?');">
+                    <input type="hidden" name="park_id" value="{{park.id}}">
+                    <input type="hidden" name="bolder_id" value="{{bolder.id}}">
+                    <button type="submit" class="small-button danger-button" title="Odstrani parkirišče">🗑️</button>
+                </form>
+            </td>
             
         </tr>
     % end

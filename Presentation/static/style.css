@@ -33,7 +33,7 @@ body {
 }
 
 
-h2 {                                        /* ???? */
+h2 { 
     text-align: center;
     /*background-color: #FBBC04;*/
     padding: 5px;
@@ -44,45 +44,24 @@ h2 {                                        /* ???? */
     margin:auto;
 }
 
-.boulder-section {                      /* Nisem še tok daleč, zaenkrat še ne tikamo */
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-    flex-wrap: wrap;
-    margin-bottom: 20px;
-}
 
-
-.routes-table {                     /* Nisem še tok daleč, zaenkrat še ne tikamo */
+.routes-table {
     border-collapse: collapse;
     width: 100%;
 }
 
-.routes-table th, .routes-table td {    /* Nisem še tok daleč, zaenkrat še ne tikamo */
+.routes-table th, .routes-table td {
     border: 1px solid #ddd;
     padding: 10px;
 }
 
-.routes-table th {                      /* Nisem še tok daleč, zaenkrat še ne tikamo */
+.routes-table th {
     background-color: #f2f2f2;
     text-align: left;
 }
 
-.routes-table tr:nth-child(even) {      /* Nisem še tok daleč, zaenkrat še ne tikamo */
+.routes-table tr:nth-child(even) {
     background-color: #f9f9f9;
-}
-
-.description-section, .notice-section, .comments-section {
-    margin-bottom: 20px;
-}                                       /* Nisem še tok daleč, zaenkrat še ne tikamo */
-
-
-.comment {                              /* Nisem še tok daleč, zaenkrat še ne tikamo */
-    background-color: #fff;
-    padding: 10px;
-    margin-bottom: 10px;
-    border-radius: 5px;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 
@@ -94,18 +73,19 @@ h2 {                                        /* ???? */
 }
 
 /* Container for positioning the home button */
-.home-button-container {                /* Pogruntaj kako v layout */
+.home-button-container {
     width: 100%;
     background-color: #FBBC04;
 }
 
 /* Style for the home button (image) */
-.home-button {                                              /* anono */
+.home-button {
     display: flex; /* Enables alignment for child img */
     justify-content: center;
     align-items: center;
     width: 125px; /* Adjust size as needed */
     height: 70px; /* Adjust size as needed */
+    margin-left: 15px;
 }
 
 .home-button img {
@@ -146,14 +126,23 @@ h2 {                                        /* ???? */
     text-decoration: none;
     color: black;
     font-weight: bold;
+    transition: background-color 0.3s;
 }
+
+.nav-links a.active {
+    background-color: #ffda6c;
+}
+.nav-links a:hover {
+    background-color: #ffda6c;
+}
+
 
 
 /* Style for the right section (Login button) */
 .navbar .login-container {
     display: flex;
     align-items: center;
-    margin-left: auto !important; /* Potisne gumb na desno */    /* Ne dela for some reason */
+    margin-left: auto !important; /* Potisne gumb na desno */
 }
 
 
@@ -167,13 +156,12 @@ h2 {                                        /* ???? */
 .centered-box {
     border: 3px solid #FBBC04; /* Yellow border */
     margin: auto;
-    padding: 20px;
-    
+    padding: 20px;   
 }
 
 
 /* Style the top navigation bar */
- .top-nav {                                               /* Ne vidi ničesar??? */
+ .top-nav {
     position: fixed;            /* Keep it fixed at the top */
     top: 0;
     right: 0;
@@ -184,7 +172,7 @@ h2 {                                        /* ???? */
     background-color: #FBBC04;  /* Optional: background color for contrast */
 }
 
-.form-grid {                            /* Nisem še tok daleč, zaenkrat še ne tikamo */
+.form-grid {
     display: grid;
     grid-template-columns: auto 1fr;  /* Two columns: auto for labels, flex for inputs */
     gap: 10px;                        /* Space between elements */
@@ -194,7 +182,7 @@ h2 {                                        /* ???? */
 
 
 /* Style the username link */
-summary {                           /* Nisem še tok daleč, zaenkrat še ne tikamo */
+summary {
     cursor: pointer;
     font-weight: bold;
     color: #640057;
@@ -202,7 +190,6 @@ summary {                           /* Nisem še tok daleč, zaenkrat še ne tik
 }
 
 form {
-    width: 100%; /* Naj zavzamejo celotno širino */
     margin-bottom: 20px; /* Doda razmik med obrazcema */
 }
 
@@ -213,12 +200,12 @@ hr.divider {
   }
 
 /* Style the dialog content */
-details {                           /* Nisem še tok daleč, zaenkrat še ne tikamo */
+details {
     position: relative;
     display: block;
 }
 
-.logout-dialog {                    /* Nisem še tok daleč, zaenkrat še ne tikamo */
+.logout-dialog {
     position: relative;
     margin-top: 30px;
     right: 0;
@@ -231,68 +218,12 @@ details {                           /* Nisem še tok daleč, zaenkrat še ne tik
     text-align: center;
 }
 
-.logout-dialog button {                 /* Nisem še tok daleč, zaenkrat še ne tikamo */
+.logout-dialog button {
     margin: 5px;
     padding: 8px 16px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-}
-
-
-.dialog-overlay {               /* Nisem še tok daleč, zaenkrat še ne tikamo */
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    justify-content: center;
-    align-items: center;
-}
-
-.dialog-box {                   /* Nisem še tok daleč, zaenkrat še ne tikamo */
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    text-align: center;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-}
-
-.dialog-box input {             /* Nisem še tok daleč, zaenkrat še ne tikamo */
-    width: 80%;
-    padding: 10px;
-    margin: 10px 0;
-}
-
-.dialog-box button {                /* Nisem še tok daleč, zaenkrat še ne tikamo */
-    margin: 10px;
-    padding: 8px 15px;
-    cursor: pointer;
-}
-
-
-.buttons {                          /* Nisem še tok daleč, zaenkrat še ne tikamo */
-    display: flex;
-    justify-content: center;
-    margin-top: 10px; /* Space between slideshow and buttons */
-}
-    /* Small arrow buttons */
-.arrow-btn {                        /* Nisem še tok daleč, zaenkrat še ne tikamo */
-    background: #FBBC04; /* Semi-transparent background */
-    border: none;
-    font-weight: bold;
-    font-size: 24px; /* Adjust size of arrow */
-    cursor: pointer;
-    color: black;
-    text-align: center;
-    padding: 5px 10px;
-    border-radius: 50%;
-}
-
-.arrow-btn:hover {
-    background: #FFD966; /* Light background on hover */
 }
 
 .small-button {

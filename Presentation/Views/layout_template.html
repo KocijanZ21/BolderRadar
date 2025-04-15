@@ -1,5 +1,5 @@
-<html>
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -22,19 +22,19 @@
     
         <!-- Center: Navigation Links -->
         <div class="nav-links">
-            <a href="/" { if request.path = '/' } style="background-color: #ffda6c;" {% end}>MAP</a>
-            <a href="/sector_info" { if request.path = '/boulder-info' } style="background-color: #ffda6c;" {% end}>BOULDER</a>
-            <a href="/dodaj_bolder" { if request.path = '/dodaj_bolder' } style="background-color: #ffda6c;" {% end}>DODAJ BOLDER</a>
-            <a href="/aboutus" { if request.path = '/aboutus' } style="background-color: #ffda6c;" {% end}>O NAS</a>
+            <a href="/" class="{{'active' if request.path == '/' else ''}}">MAP</a>
+            <a href="/pokrajine" class="{{'active' if request.path == '/pokrajine' else ''}}">POKRAJINE</a>
+            <a href="/dodaj_bolder" class="{{'active' if request.path == '/dodaj_bolder' else ''}}">DODAJ BOLDER</a>
+            <a href="/aboutus" class="{{'active' if request.path == '/aboutus' else ''}}">O NAS</a>
         </div>
 
         <!-- Right: Login Button -->
         <div class="login-container">
             % if uporabnik:
                 <details>
-                    <summary>{{uporabnik}}</summary>     <!---->
+                    <summary>{{uporabnik}}</summary> 
                     <div class="logout-dialog">
-                        <p>Are you sure you want to logout?</p>
+                        <p>Se res želiš odjaviti? {{uporabnik}}</p>
                         <a href="/odjava" class="button">Yes</a>
                         <button onclick="this.closest('details').removeAttribute('open')" class="button">Cancel</button>
                     </div>
@@ -45,8 +45,6 @@
             
         </div>
     </div>
-        <!-- Ker pisano v janja2, je skos "aktivno" (svetlo) stanje. Popravi v maki (al karkol že je) -->
-
 
     <div class="centered-box" style="width: 95%; display: flex; flex-direction: column; margin-top: 10px; justify-content: center; align-items: center; height: max-content;">
         {{!base}}
