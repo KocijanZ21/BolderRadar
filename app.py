@@ -87,7 +87,7 @@ def odjava():
     response.delete_cookie("uporabnik")
     response.delete_cookie("email")
     
-    redirect(url('index'))
+    redirect(url('index', uporabnik = None))
 
 @get('/registracija')
 def registracija_get():
