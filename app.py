@@ -85,8 +85,6 @@ def prijava():
         response.set_cookie("email", email, path="/")   
         response.set_cookie("uporabnik", prijava.ime, path="/")
         uporabnik=prijava.ime
-        print('prijava', prijava)
-        print('uporabnik', uporabnik)
         redirect(url('index', uporabnik=uporabnik))
 
     else:
@@ -139,7 +137,6 @@ def dodaj_bolder_post():
     lng = request.forms.getunicode('b_lng')
     opis = request.forms.getunicode('b_opis')
     sektor = request.forms.getunicode('sektor')
-    print('sektor', sektor)
 
     if service.dobi_sektor_ime(sektor) is None:
         uporabnik = uporabnik_klic()
